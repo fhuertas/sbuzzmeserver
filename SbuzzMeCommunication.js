@@ -7,6 +7,7 @@ var db =
 
 module.exports = {
 	check: function(request, response){
+		logger.log("Listen incoming");
 		var vars;
 		if (request.method == 'GET'){
 			vars = request.query;

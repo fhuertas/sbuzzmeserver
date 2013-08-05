@@ -1,15 +1,5 @@
 
-var listenFunction = function(request, response){
-	console.log('hola mundo');
-	response.send('Hello World!');
-	var vars;
-	if (request.method == 'GET'){
-		vars = request.query;
-	} else if (request.method == 'POST'){
-		vars = request.body;
-	}
-	log(vars.id);
-}
+
 
 //try {
 	var communication = require ('./SbuzzMeCommunication');
