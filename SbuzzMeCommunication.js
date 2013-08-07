@@ -23,10 +23,10 @@ module.exports = {
 		
 		if (request.method == 'GET'){
 			vars = request.query;
-			if (typeof(vars.contacts) !== 'undefined' || typeof(vars.session) !== 'undefined'){
+			if (typeof(vars.contacts) !== 'undefined' && typeof(vars.session) !== 'undefined'){
 				var session = vars.session;
 				var status = new Object();
-				status['response'] = "0";
+				status['status'] = global.OK;
 				status['contacts'] = new Object();
 				var contacts = vars.contacts.split(',');
 				logger.log(contacts);
@@ -48,7 +48,7 @@ module.exports = {
 				
 			}else {
 				var status = new Object();
-				status['response'] = "-1";
+				status['status'] = global.ERR;
 				response.send(status);
 			}
 		} else if (request.method == 'POST'){
@@ -65,37 +65,79 @@ module.exports = {
 		} else if (request.method == 'POST'){
 			vars = request.query;
 		}
-		if ((typeof(vars.contact) !== 'undefined') || 
-			(typeof(vars.session) !== 'undefined')){
+		if ((typeof(vars.contact) !== 'undefined') && 
+			(typeof(vars.session) !== 'undefined') &&
+			(typeof(vars.id) !== 'undefined')){
+			logger.log("From: "+vars.session+", To: "+vars.contact+", Id: "+vars.id);
 			//var session = sec.getSession(vars.session);
 			var session = vars.session;
 			var direction = db.getContact(vars.contact)
-			var result = _sbuzzme(session,direction);
+			if (typeof(direction) === 'undefined'){
+				var status = new Object();
+				status.s= global.ERR;
+				response.send(status);
+
+			}
+			var result = _sbuzzme(session,direction,vars.id);
 			if (!result){
 				queue.add(session,vars.contact);
-				response.send("almacenada");
+				var status = new Object();
+				status.s= global.SAVED;
+				response.send(status);
 			}
-			response.send("enviada");
+			var status = new Object();
+			status.s= global.OK;
+			response.send(status);
 		}
+		var status = new Object();
+		status.s= global.ERR;
+		response.send(status);
 	},
 	register: function(request, response){ 
 		vars = request.query;
 		if (typeof(vars.contact) !== 'undefined') {
 			// Abria que autentificar primero
-			db.addContact(vars.contact);
-			response.send("200");
+			db.addNovalidate(vars.contact);
+			var status = new Object();
+			status.status= global.OK;
+			response.send(status);
 		}
-		// Responder
+		status.s= global.ERR;
+		response.send(status);
+	},
+	
+	validate: function (request, response) {
+		vars = request.query;
+		if ((typeof(vars.contact) !== 'undefined') && (typeof(vars.code) !== 'undefined')){
+			// Abria que autentificar primero
+			var status = new Object();
+			if (db.addContact(vars.contact,vars.code)){
+				status.status= global.OK;
+			}else {
+				status.status= global.ERR_2;
+			}
+			
+			response.send(status);
+		}
+		var status = new Object();
+		status.s= global.ERR;
+		response.send(status);
 	},
 	
 	getContacts: function(request, response){ 
 		logger.log(db.getContacts());
 		response.send(db.getContacts());
 	},
+	
+	getContactsNovalidate: function(request, response){ 
+		logger.log(db.getContactsNovalidate());
+		response.send(db.getContactsNovalidate());
+	},
+	
 	listQueue: function(request, response){ 
 		queue.list();
 		response.send("200");
-	},
+	}
 }
 
 
