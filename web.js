@@ -1,4 +1,4 @@
-console.log("hola mundo");
+console.log("Cargando aplicacion");
 
 
 //try {
@@ -24,7 +24,17 @@ console.log("hola mundo");
 	var getContactsPath = properties.get('getContactsPath');
 	var getContactsNovalidatePath = properties.get('getContactsNovalidatePath');
 	var listQueuePath = properties.get('listQueuePath');
-	
+	logger.log("Puerto: "+port);
+	logger.log("Path de check="+checkPath);
+	logger.log("Path de Sbuzz="+SbuzzMePath);
+	logger.log("Path de registro="+registerPath);
+	logger.log("Path de validacion="+validatePath);
+	logger.log("Path de obtener contactos="+getContactsPath);
+	logger.log("Path de obtener contactos no validados="+getContactsNovalidatePath);
+	logger.log("Path de listar la cola de mensajes="+listQueuePath);
+	logger.log("Path de");
+	logger.log("Path de");
+	logger.log("");
 	
 	app.get(checkPath,communication.check);
 	app.get(SbuzzMePath,communication.sbuzzme);
