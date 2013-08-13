@@ -14,16 +14,7 @@
 	app.use(express.logger());
 
 
-	app.get('/', function(request, response) {
-	  response.send('Hello World!');
-	});
-
-	var port = process.env.PORT || 5050;
-	app.listen(port, function() {
-	  console.log("Listening on " + port);
-	});
 	
-	return;
 	var parser = require('properties-parser');
 	
 	
@@ -38,6 +29,18 @@
 	var getContactsPath = properties.get('getContactsPath');
 	var getContactsNovalidatePath = properties.get('getContactsNovalidatePath');
 	var listQueuePath = properties.get('listQueuePath');
+	
+	
+	app.get('/', function(request, response) {
+	  response.send('Hello World!');
+	});
+
+	var port = process.env.PORT || 5050;
+	app.listen(port, function() {
+	  console.log("Listening on " + port);
+	});
+	
+	return;
 	logger.log("Puerto: "+_port);
 	logger.log("Path de check="+checkPath);
 	logger.log("Path de Sbuzz="+SbuzzMePath);
