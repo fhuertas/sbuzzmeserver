@@ -44,7 +44,7 @@ console.log("Cargando aplicacion");
 	app.get(getContactsNovalidatePath,communication.getContactsNovalidate);
 	app.get(listQueuePath,communication.listQueue);*/
 	/*DEBUG*/
-	app.get("/test",function (request,response){
+	app.get("/",function (request,response){
 		response.send("Hola Mundo");
 	
 	
