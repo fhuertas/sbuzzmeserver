@@ -44,17 +44,15 @@
 	logger.log("Path de");
 	logger.log("");
 	
-	app.get(checkPath,communication.check);/*
+	app.get(checkPath,communication.check);
 	app.get(SbuzzMePath,communication.sbuzzme);
 	app.get(registerPath,communication.register);
 	app.get(validatePath,communication.validate);
 	app.get(getContactsPath,communication.getContacts);
 	app.get(getContactsNovalidatePath,communication.getContactsNovalidate);
-	app.get(listQueuePath,communication.listQueue);*/
-	/*DEBUG*/
-	
+	app.get(listQueuePath,communication.listQueue);
 	app.get('/', function(request, response) {
-	  response.send('SbuzzMeServer is runnig!');
+	  response.send('SbuzzMeServer is runnig	!');
 	});
 
 	var port = process.env.PORT || _port;
@@ -63,22 +61,6 @@
 	});
 	
 	return;
-	
-	app.get("/",function (request,response){
-		response.send("Hola Mundo");
-	
-	// Si hay un puerto por defecto lo usamos
-	var port = process.env.PORT || _port;
-
-	});
-	app.listen(port, function() {
-		console.log("Listening on " + port);
-	});
-	
-	
-
-	
-	
 /*}catch (err){
 	console.log(err)
 	// Procesos de salida de emergencia
