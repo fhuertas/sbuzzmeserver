@@ -1,5 +1,7 @@
 
 
+
+
 //try {
 	require('./SbuzzMeConstants');
 	var logger = require('./log.js');
@@ -11,13 +13,24 @@
 	var app = express();
 	app.use(express.logger());
 
+
+	app.get('/', function(request, response) {
+	  response.send('Hello World!');
+	});
+
+	var port = process.env.PORT || 5000;
+	app.listen(port, function() {
+	  console.log("Listening on " + port);
+	});
+	
+	return
 	var parser = require('properties-parser');
 	
 	
 	var properties = parser.createEditor(configFile);
 	global.myProperties = properties;
 
-	var port = properties.get('port');
+	var _port = properties.get('port');
 	var checkPath = properties.get('checkPath');
 	var SbuzzMePath = properties.get('SbuzzMePath');
 	var registerPath = properties.get('registerPath');
@@ -25,7 +38,7 @@
 	var getContactsPath = properties.get('getContactsPath');
 	var getContactsNovalidatePath = properties.get('getContactsNovalidatePath');
 	var listQueuePath = properties.get('listQueuePath');
-	logger.log("Puerto: "+port);
+	logger.log("Puerto: "+_port);
 	logger.log("Path de check="+checkPath);
 	logger.log("Path de Sbuzz="+SbuzzMePath);
 	logger.log("Path de registro="+registerPath);
@@ -49,7 +62,7 @@
 		response.send("Hola Mundo");
 	
 	// Si hay un puerto por defecto lo usamos
-	port = process.env.PORT || port;
+	var port = process.env.PORT || _port;
 
 	});
 	app.listen(port, function() {
