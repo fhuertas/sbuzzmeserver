@@ -100,6 +100,8 @@ module.exports = {
 			db.addNovalidate(vars.contact);
 			var status = new Object();
 			status.status= global.OK;
+			// TODO hay que cambiar 
+			status.authToken= "token"+vars.contact;
 			response.send(status);
 		}
 		status.s= global.ERR;
