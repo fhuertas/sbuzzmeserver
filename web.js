@@ -57,7 +57,7 @@
 	  response.send('Hello World!');
 	});
 
-	var port = process.env.PORT || 5050;
+	var port = process.env.PORT || _port;
 	app.listen(port, function() {
 	  console.log("Listening on " + port);
 	});
