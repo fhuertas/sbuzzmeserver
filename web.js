@@ -44,7 +44,7 @@
 	logger.log("Path de");
 	logger.log("");
 	
-	/*app.get(checkPath,communication.check);
+	app.get(checkPath,communication.check);/*
 	app.get(SbuzzMePath,communication.sbuzzme);
 	app.get(registerPath,communication.register);
 	app.get(validatePath,communication.validate);
@@ -54,7 +54,7 @@
 	/*DEBUG*/
 	
 	app.get('/', function(request, response) {
-	  response.send('Hello World!');
+	  response.send('SbuzzMeServer is runnig!');
 	});
 
 	var port = process.env.PORT || _port;
