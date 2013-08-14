@@ -17,7 +17,7 @@ function _sbuzzme(direction){
 
 module.exports = {
 	check: function(request, response){
-		logger.log("Listen incoming");
+		logger.log("Check contacts");
 		var vars;
 		
 		
@@ -29,21 +29,19 @@ module.exports = {
 				status['status'] = global.OK;
 				status['contacts'] = new Object();
 				var contacts = vars.contacts.split(',');
-				logger.log(contacts);
-				logger.log(contacts[0]);
 				
 				for (var i = 0; i < contacts.length; i++){
 				//for (var contact in contacts){
 					contact = contacts[i];	
-					logger.log("contacto: " + contact);
 					var statusContact = db.get(contact);
 					if (typeof (statusContact) !== 'undefined'){
 						status['contacts'][contact] = db.get(contact);
-					} else{
+					} /*else{
 						status['contacts'][contact] = global.UNREGISTERED;
-					}
+					}*/
 						
 				}
+				logger.log(status);
 				response.send(status);
 				
 			}else {
@@ -53,11 +51,14 @@ module.exports = {
 			}
 		} else if (request.method == 'POST'){
 			response.send('Only GET method are supported');
-			return;
 		}
+		logger.log("End check");
+
 	},
 	
 	sbuzzme: function(request, response){ 
+		logger.log("SbuzzMe");
+
 		if (request.method == 'GET'){
 			vars = request.query;
 			//response.send('Only Post method are supported');
@@ -92,28 +93,41 @@ module.exports = {
 		var status = new Object();
 		status.s= global.ERR;
 		response.send(status);
+		logger.log("End: SbuzzMe");
+
 	},
 	register: function(request, response){ 
+		logger.log("Start: register");
+
 		vars = request.query;
 		if (typeof(vars.contact) !== 'undefined') {
 			// Abria que autentificar primero
-			db.addNovalidate(vars.contact);
+			db.addContact(vars.contact);
 			var status = new Object();
 			status.status= global.OK;
 			// TODO hay que cambiar 
-			status.authToken= "token"+vars.contact;
+			status.authtoken= "token"+vars.contact;
+			var min = global.myProperties.get('minNumberRandom');
+			var max = global.myProperties.get('maxNumberRandom');
+			status.authcode=  parseInt(Math.random() * (max-min) + min);
+			logger.log("Register OK, Contact="+vars.contact+", AUTH CODE="+status.authcode);
+			response.send(status);
+		} else {
+			status.status= global.ERR;
+			logger.log("Register ERR, Contact="+vars.contact);
 			response.send(status);
 		}
-		status.s= global.ERR;
-		response.send(status);
+		logger.log("End: register");
 	},
 	
-	validate: function (request, response) {
+/*	validate: function (request, response) {
+		logger.log("Start: register");
+
 		vars = request.query;
-		if ((typeof(vars.contact) !== 'undefined') && (typeof(vars.code) !== 'undefined')){
+		if (typeof(vars.contact) !== 'undefined'){
 			// Abria que autentificar primero
 			var status = new Object();
-			if (db.addContact(vars.contact,vars.code)){
+			if (db.addContact(vars.contact)){
 				status.status= global.OK;
 			}else {
 				status.status= global.ERR_2;
@@ -124,21 +138,29 @@ module.exports = {
 		var status = new Object();
 		status.s= global.ERR;
 		response.send(status);
-	},
+		logger.log("End: register");
+
+	},*/
 	
 	getContacts: function(request, response){ 
+		logger.log("Start: getContacts");
 		logger.log(db.getContacts());
 		response.send(db.getContacts());
+		logger.log("end: getContacts");
 	},
 	
 	getContactsNovalidate: function(request, response){ 
+		logger.log("Start: getContactsNovalidate");		
 		logger.log(db.getContactsNovalidate());
 		response.send(db.getContactsNovalidate());
+		logger.log("End: getContactsNovalidate");		
 	},
 	
 	listQueue: function(request, response){ 
+		logger.log("Start: listQueue");		
 		queue.list();
 		response.send("200");
+		logger.log("End: listQueue");		
 	}
 }
 

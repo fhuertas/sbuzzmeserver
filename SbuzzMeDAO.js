@@ -29,7 +29,10 @@ module.exports = {
 		return db[contact];
 	},
 	
-	addContact: function (contact, code) {
+	addContact: function (contact) {
+		db[contact] = new Object();
+		db[contact] = global.ONLINE;
+		return;
 		if (typeof(db_2[contact]) === 'undefined'){
 			return false;
 		}
@@ -46,12 +49,9 @@ module.exports = {
 	},
 	
 	addNovalidate: function (contact) {
-		// Hacer limpia?
-		var min = global.myProperties.get('minxNumberRandom');
+		var min = global.myProperties.get('minNumberRandom');
 		var max = global.myProperties.get('maxNumberRandom');
 		db_2[contact] = new Object();
-		db_2[contact].code = parseInt(Math.random() * (max-min)) + min;
-		db_2[contact].code = 0;
 		return db_2[contact].code;
 	},
 	
