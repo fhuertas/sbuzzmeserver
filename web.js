@@ -29,7 +29,7 @@
 	var getContactsPath = properties.get('getContactsPath');
 	var getContactsNovalidatePath = properties.get('getContactsNovalidatePath');
 	var listQueuePath = properties.get('listQueuePath');
-	
+
 	
 	
 	logger.log("Puerto: "+_port);
@@ -50,7 +50,6 @@
 	app.post(SbuzzMePath,communication.sbuzzme);
 	app.post(registerPath,communication.register);
 	app.post(getContactsPath,communication.getContacts);
-	app.get(getContactsNovalidatePath,communication.getContactsNovalidate);
 	app.get(listQueuePath,communication.listQueue);
 	app.get('/', function(request, response) {
 	  response.send('SbuzzMeServer is runnig!');
