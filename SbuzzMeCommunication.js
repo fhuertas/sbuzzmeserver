@@ -1,7 +1,7 @@
 /**
  * Llamadas: Check con user
  */
- 
+
  // Responder con estados
 
 var logger = require('./log.js');
@@ -19,6 +19,19 @@ function _sbuzzme(direction){
 module.exports = {
 	check: function(request, response){
 		logger.log("START: Check contacts");
+		        var body = '';
+                request.on('data', function (data) {
+                    body += data;
+                });
+                request.on('end', function () {
+
+                    var POST = qs.parse(body);
+                    logger.log(POST);
+
+                    // use POST
+
+                });
+                return;
 		var form = new formidable.IncomingForm()
 		form.parse(request, function(err, fields, files) {
 			// Si no esta esta linea una llamada incorrecta puede petar el servicio
@@ -35,11 +48,11 @@ module.exports = {
 				status['contacts'] = new Object();
 
 				for (var i = 0; i < contacts.length; i++){
-					contact = contacts[i];	
+					contact = contacts[i];
 					var statusContact = db.get(contact);
 					if (typeof (statusContact) !== 'undefined'){
 						status['contacts'][contact] = db.get(contact);
-					} 
+					}
 				}
 				logger.log(status['contacts']);
 				response.send(status);
@@ -50,12 +63,12 @@ module.exports = {
 		logger.log("END: Check contacts");
 		return;
 	},
-	
-	sbuzzme: function(request, response){ 
+
+	sbuzzme: function(request, response){
 		logger.log("START: SbuzzMe");
 		var form = new formidable.IncomingForm()
 		form.parse(request, function(err, fields, files) {
-			
+
 			try {
 				var contacts = JSON.parse(fields.contacts);
 				var session = fields.session;
@@ -64,9 +77,9 @@ module.exports = {
 				response.send(global.HTML_BAD_REQUEST);
 				return;
 			}
-			
-			
-			if ((typeof(contacts) !== 'undefined') && 
+
+
+			if ((typeof(contacts) !== 'undefined') &&
 					(typeof(session) !== 'undefined') &&
 					(typeof(id) !== 'undefined')){
 				var status = new Object();
@@ -96,7 +109,7 @@ module.exports = {
 		logger.log("END: SbuzzMe");
 		return;
 	},
-	register: function(request, response){ 
+	register: function(request, response){
 		logger.log("Start: register");
 		var form = new formidable.IncomingForm()
 		form.parse(request, function(err, fields, files) {
@@ -108,7 +121,7 @@ module.exports = {
 				status.authtoken= "token"+fields.contact;
 				var min = global.myProperties.get('minNumberRandom');
 				var max = global.myProperties.get('maxNumberRandom');
-				
+
 				var authCode = parseInt((Math.random() * (max-min)) );//parseInt(max) - parseInt(min));
 				authCode += parseInt(min);
 				status.authcode=  authCode ;
@@ -124,7 +137,7 @@ module.exports = {
 			logger.log("End: register");
 		})
 		return;
-		
+
 		var status = new Object();
 		vars = request.query;
 		if (typeof(vars.contact) !== 'undefined') {
@@ -132,7 +145,7 @@ module.exports = {
 			db.addContact(vars.contact);
 			var status = new Object();
 			status.status= global.OK;
-			// TODO hay que cambiar 
+			// TODO hay que cambiar
 			status.authtoken= "token"+vars.contact;
 			var min = global.myProperties.get('minNumberRandom');
 			var max = global.myProperties.get('maxNumberRandom');
@@ -144,9 +157,9 @@ module.exports = {
 			logger.log("Register ERR, Contact="+vars.contact);
 			response.send(status);
 		}
-		
+
 	},
-	
+
 /*	validate: function (request, response) {
 		logger.log("Start: register");
 
@@ -159,7 +172,7 @@ module.exports = {
 			}else {
 				status.status= global.ERR_2;
 			}
-			
+
 			response.send(status);
 		}
 		var status = new Object();
@@ -168,18 +181,18 @@ module.exports = {
 		logger.log("End: register");
 
 	},*/
-	
-	getContacts: function(request, response){ 
+
+	getContacts: function(request, response){
 		logger.log("Start: getContacts");
 		logger.log(db.getContacts());
 		response.send(db.getContacts());
 		logger.log("end: getContacts");
 	},
 	listQueue: function(request, response){
-		logger.log("Start: listQueue");		
+		logger.log("Start: listQueue");
 		queue.list();
 		response.send("200");
-		logger.log("End: listQueue");		
+		logger.log("End: listQueue");
 	}
 }
 
