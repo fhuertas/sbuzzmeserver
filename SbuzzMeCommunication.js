@@ -31,7 +31,6 @@ module.exports = {
                     // use POST
 
                 });
-                return;
 		var form = new formidable.IncomingForm()
 		form.parse(request, function(err, fields, files) {
 			// Si no esta esta linea una llamada incorrecta puede petar el servicio
