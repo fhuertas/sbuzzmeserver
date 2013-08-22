@@ -26,14 +26,17 @@ module.exports = {
                 request.on('end', function () {
 
                     var POST = qs.parse(body);
-                    logger.log(POST);
                     try {
                     				var post = JSON.parse(POST);
                     				var contacts = post.contacts
                     				var session = post.session;
+                    				logger.log("------");
                     				logger.log(post);
+                    				logger.log("------");
                     				logger.log(contacts);
+                    				logger.log("------");
                     				logger.log(session);
+                    				logger.log("------");
                     			} catch (e){
                     				response.send(global.HTML_BAD_REQUEST);
                     				return;
