@@ -31,6 +31,9 @@ module.exports = {
                     				var post = JSON.parse(POST);
                     				var contacts = post.contacts
                     				var session = post.session;
+                    				logger.log(post);
+                    				logger.log(contacts);
+                    				logger.log(session);
                     			} catch (e){
                     				response.send(global.HTML_BAD_REQUEST);
                     				return;
