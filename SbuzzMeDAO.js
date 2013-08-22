@@ -6,10 +6,10 @@ var logger = require('./log.js');
 // Base de datos temporal, posiblemente luego si esta establecido guarde el socket o offline si esta desctivada
 // Problemas paises
 var db = new Object();
-db['0034653264427'] = global.ONLINE
-db['0034664763824'] = global.OFFLINE
-db['0034123456789'] = global.ONLINE
-db['976230380'] = global.ONLINE
+db['(+34)653264427'] = global.ONLINE
+db['(+34)664763824'] = global.OFFLINE
+db['(+34)123456789'] = global.ONLINE
+db['(+34)976230380'] = global.ONLINE
 
 
 var db_2 = new Object();
@@ -17,13 +17,7 @@ var db_2 = new Object();
 module.exports = {
 	get: function(key){
 		var response;
-		if (typeof db[key] === 'undefined'){
-			response = global.UNREGISTERED;
-		} else {
-			response = db[key];
-		}
-		logger.log(response);
-		return response;
+		return response = db[key];
 	},
 	getContact: function (contact) {
 		return db[contact];
@@ -33,19 +27,6 @@ module.exports = {
 		db[contact] = new Object();
 		db[contact] = global.ONLINE;
 		return;
-		if (typeof(db_2[contact]) === 'undefined'){
-			return false;
-		}
-		var code2 = db_2[contact].code;
-		logger.log("Codigo enviado: "+code);
-		logger.log("Codigo almacenado: "+code2);
-		if ((typeof(db_2[contact]) !== 'undefined') && (code == code2)){
-			delete db_2[contact];
-			db[contact] = new Object();
-			db[contact] = global.ONLINE;
-			return true;
-		}
-		return false
 	},
 	
 	addNovalidate: function (contact) {

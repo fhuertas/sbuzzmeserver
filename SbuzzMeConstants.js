@@ -1,8 +1,11 @@
 global.OK = 0;
 global.SAVED = 1;
+global.SEND = 2;
 global.ERR = -1;
 global.ERR_2 = -2;
+global.UNREGISTERED = -3;
 global.ONLINE = "online";
 global.OFFLINE = "offline";
-global.UNREGISTERED = "unregistered";
 global.UNKNOWN = "unknown";
+global.HTML_OK = 200;
+global.HTML_BAD_REQUEST = 400;

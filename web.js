@@ -41,21 +41,28 @@
 	logger.log("Path de obtener contactos no validados="+getContactsNovalidatePath);
 	logger.log("Path de listar la cola de mensajes="+listQueuePath);
 	
-	app.get(checkPath,communication.check);
-	app.get(SbuzzMePath,communication.sbuzzme);
-	app.get(registerPath,communication.register);
+
+	//app.get(registerPath,communication.register);
 	//app.get(validatePath,communication.validate);
-	app.get(getContactsPath,communication.getContacts);
+	//app.get(getContactsPath,communication.getContacts);
+
+	app.post(checkPath,communication.check);
+	app.post(SbuzzMePath,communication.sbuzzme);
+	app.post(registerPath,communication.register);
+	app.post(getContactsPath,communication.getContacts);
 	app.get(getContactsNovalidatePath,communication.getContactsNovalidate);
 	app.get(listQueuePath,communication.listQueue);
 	app.get('/', function(request, response) {
-	  response.send('SbuzzMeServer is runnig	!');
+	  response.send('SbuzzMeServer is runnig!');
 	});
 
 	var port = process.env.PORT || _port;
 	app.listen(port, function() {
 	  console.log("Listening on " + port);
 	});
+	
+	
+	
 	
 	return;
 /*}catch (err){

@@ -10,6 +10,7 @@ var db = require('./SbuzzMeDAO');
 var qs = require('querystring');
 var url = require("url");
 var queue = require('./SbuzzMeQueue');
+formidable = require('formidable')
 
 function _sbuzzme(direction){
 	return false;
@@ -17,88 +18,114 @@ function _sbuzzme(direction){
 
 module.exports = {
 	check: function(request, response){
-		logger.log("Check contacts");
-		var vars;
-		
-		
-		if (request.method == 'GET'){
-			vars = request.query;
-			if (typeof(vars.contacts) !== 'undefined' && typeof(vars.session) !== 'undefined'){
-				var session = vars.session;
+		logger.log("START: Check contacts");
+		var form = new formidable.IncomingForm()
+		form.parse(request, function(err, fields, files) {
+			// Si no esta esta linea una llamada incorrecta puede petar el servicio
+			try {
+				var contacts = JSON.parse(fields.contacts);
+				var session = fields.session;
+			} catch (e){
+				response.send(global.HTML_BAD_REQUEST);
+				return;
+			}
+			if (typeof(contacts) !== 'undefined' && typeof(session) !== 'undefined'){
 				var status = new Object();
 				status['status'] = global.OK;
 				status['contacts'] = new Object();
-				var contacts = vars.contacts.split(',');
-				
+
 				for (var i = 0; i < contacts.length; i++){
-				//for (var contact in contacts){
 					contact = contacts[i];	
 					var statusContact = db.get(contact);
 					if (typeof (statusContact) !== 'undefined'){
 						status['contacts'][contact] = db.get(contact);
-					} /*else{
-						status['contacts'][contact] = global.UNREGISTERED;
-					}*/
-						
+					} 
 				}
-				logger.log(status);
+				logger.log(status['contacts']);
 				response.send(status);
-				
 			}else {
-				var status = new Object();
-				status['status'] = global.ERR;
-				response.send(status);
+				response.send(global.HTML_BAD_REQUEST);
 			}
-		} else if (request.method == 'POST'){
-			response.send('Only GET method are supported');
-		}
-		logger.log("End check");
-
+		});
+		logger.log("END: Check contacts");
+		return;
 	},
 	
 	sbuzzme: function(request, response){ 
-		logger.log("SbuzzMe");
-
-		if (request.method == 'GET'){
-			vars = request.query;
-			//response.send('Only Post method are supported');
-			//return;
-		} else if (request.method == 'POST'){
-			vars = request.query;
-		}
-		if ((typeof(vars.contact) !== 'undefined') && 
-			(typeof(vars.session) !== 'undefined') &&
-			(typeof(vars.id) !== 'undefined')){
-			logger.log("From: "+vars.session+", To: "+vars.contact+", Id: "+vars.id);
-			//var session = sec.getSession(vars.session);
-			var session = vars.session;
-			var direction = db.getContact(vars.contact)
-			if (typeof(direction) === 'undefined'){
-				var status = new Object();
-				status.s= global.ERR;
-				response.send(status);
-
+		logger.log("START: SbuzzMe");
+		var form = new formidable.IncomingForm()
+		form.parse(request, function(err, fields, files) {
+			
+			try {
+				var contacts = JSON.parse(fields.contacts);
+				var session = fields.session;
+				var id = fields.id;
+			} catch (e){
+				response.send(global.HTML_BAD_REQUEST);
+				return;
 			}
-			var result = _sbuzzme(session,direction,vars.id);
-			if (!result){
-				queue.add(session,vars.contact);
+			
+			
+			if ((typeof(contacts) !== 'undefined') && 
+					(typeof(session) !== 'undefined') &&
+					(typeof(id) !== 'undefined')){
 				var status = new Object();
-				status.s= global.SAVED;
+				status.contacts = new Object();
+				for (var i = 0; i < contacts.length; i++){
+					var contact = contacts[i];
+					logger.log("From: "+session+", To: "+contact+", Id: "+id);
+					if (typeof(db.getContact(contact)) === 'undefined'){
+						status.contacts[contact]= global.UNREGISTERED;
+					}else {
+						var direction = db.getContact(contact)
+						var result = _sbuzzme(session,direction,id);
+						if (!result){
+							queue.add(session,contact);
+							status.contacts[contact]= global.SAVED;
+						}else {
+							status.contacts[contact]= global.SEND;
+						}
+					}
+				}
+				status.status= global.OK;
 				response.send(status);
+			}else {
+				response.send(global.HTML_BAD_REQUEST);
 			}
-			var status = new Object();
-			status.s= global.OK;
-			response.send(status);
-		}
-		var status = new Object();
-		status.s= global.ERR;
-		response.send(status);
-		logger.log("End: SbuzzMe");
-
+		});
+		logger.log("END: SbuzzMe");
+		return;
 	},
 	register: function(request, response){ 
 		logger.log("Start: register");
-
+		var form = new formidable.IncomingForm()
+		form.parse(request, function(err, fields, files) {
+			if (typeof(fields.contact) !== 'undefined') {
+				// Abria que autentificar primero
+				db.addContact(fields.contact);
+				var status = new Object();
+				status.status= global.OK;
+				status.authtoken= "token"+fields.contact;
+				var min = global.myProperties.get('minNumberRandom');
+				var max = global.myProperties.get('maxNumberRandom');
+				
+				var authCode = parseInt((Math.random() * (max-min)) );//parseInt(max) - parseInt(min));
+				authCode += parseInt(min);
+				status.authcode=  authCode ;
+				logger.log("Register OK, Contact="+fields.contact+", AUTH CODE="+status.authcode);
+				response.set('Content-Type', 'application/json');
+				response.send(status);
+			} else {
+				status.status= global.ERR;
+				logger.log("Register ERR, Contact="+fields.contact);
+				response.set('Content-Type', 'application/json');
+				response.send(status);
+			}
+			logger.log("End: register");
+		})
+		return;
+		
+		var status = new Object();
 		vars = request.query;
 		if (typeof(vars.contact) !== 'undefined') {
 			// Abria que autentificar primero
@@ -117,7 +144,7 @@ module.exports = {
 			logger.log("Register ERR, Contact="+vars.contact);
 			response.send(status);
 		}
-		logger.log("End: register");
+		
 	},
 	
 /*	validate: function (request, response) {
@@ -148,15 +175,7 @@ module.exports = {
 		response.send(db.getContacts());
 		logger.log("end: getContacts");
 	},
-	
-	getContactsNovalidate: function(request, response){ 
-		logger.log("Start: getContactsNovalidate");		
-		logger.log(db.getContactsNovalidate());
-		response.send(db.getContactsNovalidate());
-		logger.log("End: getContactsNovalidate");		
-	},
-	
-	listQueue: function(request, response){ 
+	listQueue: function(request, response){
 		logger.log("Start: listQueue");		
 		queue.list();
 		response.send("200");
