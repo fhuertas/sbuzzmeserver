@@ -19,57 +19,11 @@ function _sbuzzme(direction){
 module.exports = {
 	check: function(request, response){
 		logger.log("START: Check contacts");
-		        var body = '';
-                request.on('data', function (data) {
-                    body += data;
-                });
-                request.on('end', function () {
-
-                    var POST = qs.parse(body);
-                    try {
-                    				var post = JSON.parse(POST);
-                    				var contacts = post.contacts
-                    				var session = post.session;
-                    				logger.log("------");
-                    				logger.log(post);
-                    				logger.log("------");
-                    				logger.log(contacts);
-                    				logger.log("------");
-                    				logger.log(session);
-                    				logger.log("------");
-                    			} catch (e){
-                    				response.send(global.HTML_BAD_REQUEST);
-                    				return;
-                    			}
-                    			if (typeof(contacts) !== 'undefined' && typeof(session) !== 'undefined'){
-                    				var status = new Object();
-                    				status['status'] = global.OK;
-                    				status['contacts'] = new Object();
-
-                    				for (var i = 0; i < contacts.length; i++){
-                    					contact = contacts[i];
-                    					var statusContact = db.get(contact);
-                    					if (typeof (statusContact) !== 'undefined'){
-                    						status['contacts'][contact] = db.get(contact);
-                    					}
-                    				}
-                    				logger.log(status['contacts']);
-                    				response.send(status);
-                    			}else {
-                    				response.send(global.HTML_BAD_REQUEST);
-                    			}
-
-                    // use POST
-
-                });
-                logger.log("END: Check contacts");
-                return;
-
 		var form = new formidable.IncomingForm()
 		form.parse(request, function(err, fields, files) {
 			// Si no esta esta linea una llamada incorrecta puede petar el servicio
 			try {
-				var contacts = JSON.parse(fields.contacts);
+				var contacts = fields.contacts;
 				var session = fields.session;
 			} catch (e){
 				response.send(global.HTML_BAD_REQUEST);
