@@ -99,11 +99,12 @@ module.exports = {
 	register: function(request, response){
 		logger.log("Start: register");
 		var form = new formidable.IncomingForm()
+		var status = new Object();
 		form.parse(request, function(err, fields, files) {
 			if (typeof(fields.contact) !== 'undefined') {
 				// Abria que autentificar primero
 				db.addContact(fields.contact);
-				var status = new Object();
+
 				status.status= global.OK;
 				status.authtoken= "token"+fields.contact;
 				var min = global.myProperties.get('minNumberRandom');
@@ -180,7 +181,14 @@ module.exports = {
 		queue.list();
 		response.send("200");
 		logger.log("End: listQueue");
-	}
+	},
+
+	ping: function(request, response){
+    		logger.log("Start: ping");
+    		logger.log("Se ha hecho ping");
+    		response.send("200");
+    		logger.log("End: ping");
+    }
 }
 
 

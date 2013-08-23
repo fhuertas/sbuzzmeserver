@@ -26,6 +26,7 @@
 	var SbuzzMePath = properties.get('SbuzzMePath');
 	var registerPath = properties.get('registerPath');
 	var validatePath = properties.get('validatePath');
+	var pingPath = properties.get('pingPath');
 	var getContactsPath = properties.get('getContactsPath');
 	var getContactsNovalidatePath = properties.get('getContactsNovalidatePath');
 	var listQueuePath = properties.get('listQueuePath');
@@ -36,7 +37,7 @@
 	logger.log("Path de check="+checkPath);
 	logger.log("Path de Sbuzz="+SbuzzMePath);
 	logger.log("Path de registro="+registerPath);
-	//logger.log("Path de validacion="+validatePath);
+	logger.log("Path de ping="+pingPath);
 	logger.log("Path de obtener contactos="+getContactsPath);
 	logger.log("Path de obtener contactos no validados="+getContactsNovalidatePath);
 	logger.log("Path de listar la cola de mensajes="+listQueuePath);
@@ -50,6 +51,7 @@
 	app.post(SbuzzMePath,communication.sbuzzme);
 	app.post(registerPath,communication.register);
 	app.post(getContactsPath,communication.getContacts);
+	app.post(pingPath,communication.ping);
 	app.get(listQueuePath,communication.listQueue);
 	app.get('/', function(request, response) {
 	  response.send('SbuzzMeServer is runnig!');
