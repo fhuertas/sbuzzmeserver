@@ -23,17 +23,39 @@ module.exports = {
 		return db[contact];
 	},
 	
-	addContact: function (contact) {
-		db[contact] = new Object();
-		db[contact] = global.ONLINE;
-		return;
+	addContact: function (contact,privateKey,code) {
+        if (typeof(db_2[contact]) !== 'undefined'){
+            if (db_2[contact].code != code){
+                db_2[contact].attempts--;
+                if (db_2[contact].attempts <= 0){
+                    logger.log("Incorrect code, Exceeded the number of attempts. Contact="+contact+" Attempts="+db_2[contact].attempts+"Stored="+db_2[contact].code+"Sended="+code);//, "Token=\"\""+status.authtoken);
+                    delete db_2[contact];
+                    return global.CODE_MAX_MISTAKES;
+                }
+                logger.log("Incorrect code. Contact="+contact+" attempts="+db_2[contact].attempts+"Stored=db_2[contact].code"+"Sended="+code);//, "Token=\"\""+status.authtoken);
+                return global.CODE_INCORRECT;
+            } else {
+                db[contact] = new Object();
+                db[contact].privateKey = privateKey;
+                db[contact].regId = "";
+                logger.log("Correct code, adding contact. Contact="+contact+" Attempts="+db_2[contact].attempts+"Code="+code);//+"pivateKey="+privateKey);//, "Token=\"\""+status.authtoken);
+                // El código de autenticación y los intentos guardar en memoria siempre,
+                delete db_2[contact];
+                return global.OK;
+            }
+        }
+        else {
+              logger.log("Incorrect contact. Contact="+contact+", Code="+code);
+              return global.CODE_UNDEFINED;
+        }
 	},
 	
-	addNovalidate: function (contact) {
-		var min = global.myProperties.get('minNumberRandom');
-		var max = global.myProperties.get('maxNumberRandom');
+	addNovalidate: function (contact,code) {
 		db_2[contact] = new Object();
-		return db_2[contact].code;
+		db_2[contact].code = code;
+		db_2[contact].attempts = global.myProperties.get('attempts');
+    	logger.log("Added to db_2 OK, Contact="+contact+", AUTH CODE="+code+", ATTEMPS="+global.myProperties.get('attempts'));//, "Token=\"\""+status.authtoken);
+
 	},
 	
 	getContacts: function () {

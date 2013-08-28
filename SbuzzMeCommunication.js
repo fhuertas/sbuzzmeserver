@@ -10,6 +10,7 @@ var db = require('./SbuzzMeDAO');
 var qs = require('querystring');
 var url = require("url");
 var queue = require('./SbuzzMeQueue');
+var ursa = require('ursa');
 formidable = require('formidable')
 
 function _sbuzzme(direction){
@@ -103,17 +104,15 @@ module.exports = {
 		form.parse(request, function(err, fields, files) {
 			if (typeof(fields.contact) !== 'undefined') {
 				// Abria que autentificar primero
-				db.addContact(fields.contact);
-
 				status.status= global.OK;
-				status.authtoken= "token"+fields.contact;
 				var min = global.myProperties.get('minNumberRandom');
 				var max = global.myProperties.get('maxNumberRandom');
-
-				var authCode = parseInt((Math.random() * (max-min)) );//parseInt(max) - parseInt(min));
-				authCode += parseInt(min);
-				status.authcode=  authCode ;
-				logger.log("Register OK, Contact="+fields.contact+", AUTH CODE="+status.authcode);
+				var authcode = parseInt((Math.random() * (max-min)) );//parseInt(max) - parseInt(min));
+				authcode += parseInt(min);
+                db.addNovalidate(fields.contact,authcode);
+				status.authcode=  authcode ;
+				logger.log("Register OK, Contact="+fields.contact+", AUTH CODE="+status.authcode);//, "Token=\"\""+status.authtoken);
+				//db.addContact(fields.contact,key.toPrivatePem().toString(),status.authcode);
 				response.set('Content-Type', 'application/json');
 				response.send(status);
 			} else {
@@ -125,27 +124,27 @@ module.exports = {
 			logger.log("End: register");
 		})
 		return;
+	},
+	validate: function(request, response){
+	    logger.log("Start: validation");
+        var form = new formidable.IncomingForm()
+        form.parse(request, function(err, fields, files) {
+	        logger.log(fields);
+            var status = new Object();
+            var key = sec.generatePrivateKey();
 
-		var status = new Object();
-		vars = request.query;
-		if (typeof(vars.contact) !== 'undefined') {
-			// Abria que autentificar primero
-			db.addContact(vars.contact);
-			var status = new Object();
-			status.status= global.OK;
-			// TODO hay que cambiar
-			status.authtoken= "token"+vars.contact;
-			var min = global.myProperties.get('minNumberRandom');
-			var max = global.myProperties.get('maxNumberRandom');
-			status.authcode=  parseInt(Math.random() * (max-min) + min);
-			logger.log("Register OK, Contact="+vars.contact+", AUTH CODE="+status.authcode);
-			response.send(status);
-		} else {
-			status.status= global.ERR;
-			logger.log("Register ERR, Contact="+vars.contact);
-			response.send(status);
-		}
+            status.status = db.addContact(fields.contact,key.toPrivatePem().toString(),fields.code);
 
+            if (status.status == global.OK){
+                status.authtoken= key.toPublicPem().toString();
+                status.authtoken = status.authtoken.split("-----")[2];
+                status.authtoken = status.authtoken.replace(/\n/g,'');
+				response.send(status);
+            }else {
+				response.send(status);
+            }
+        });
+	    logger.log("End: validation");
 	},
 
 /*	validate: function (request, response) {

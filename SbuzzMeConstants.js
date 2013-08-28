@@ -4,6 +4,10 @@ global.SEND = 2;
 global.ERR = -1;
 global.ERR_2 = -2;
 global.UNREGISTERED = -3;
+
+global.CODE_MAX_MISTAKES = -101;
+global.CODE_INCORRECT = -102;
+global.CODE_UNDEFINED = -103;
 global.ONLINE = "online";
 global.OFFLINE = "offline";
 global.UNKNOWN = "unknown";
