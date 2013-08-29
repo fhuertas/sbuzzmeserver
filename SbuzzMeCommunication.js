@@ -17,7 +17,31 @@ function _sbuzzme(direction){
 	return false;
 }
 
+
 module.exports = {
+    signIn: function(request, response){
+        var form = new formidable.IncomingForm()
+        form.parse(request, function(err, fields, files) {
+            logger.log("START: signIn.");
+            try {
+				var account_name = fields.account;
+				var GCMId_ciphered = fields.GCMId;
+				var contact = db.getContact(account_name);
+				var privateKey = sec.regeneratePrivateKey(contact.privateKey);
+
+				var GCMId = sec.decode(GCMId_ciphered,privateKey)
+
+                logger.log("SIGN_IN: (contact: \""+ account_name +"\") (GCMId: \""+GCMId+"\")");
+                db.setGCMId(account_name,GCMId);
+                response.send(global.OK);
+			} catch (e){
+			    logger.log("SIGN_IN Fail: "+e);
+				response.send(global.HTML_BAD_REQUEST);
+				return;
+			}
+        });
+        logger.log("END: signIn");
+    },
 	check: function(request, response){
 		logger.log("START: Check contacts");
 		var form = new formidable.IncomingForm()
@@ -59,8 +83,9 @@ module.exports = {
 
 			try {
 				var contacts = JSON.parse(fields.contacts);
-				var session = fields.session;
-				var id = fields.id;
+				var account = fields.account;
+				var privateKey = sec.regeneratePrivateKey(db.getContact(account).privateKey);
+
 			} catch (e){
 				response.send(global.HTML_BAD_REQUEST);
 				return;
@@ -68,13 +93,15 @@ module.exports = {
 
 
 			if ((typeof(contacts) !== 'undefined') &&
-					(typeof(session) !== 'undefined') &&
-					(typeof(id) !== 'undefined')){
+					(typeof(session) !== 'undefined')){
 				var status = new Object();
 				status.contacts = new Object();
 				for (var i = 0; i < contacts.length; i++){
-					var contact = contacts[i];
-					logger.log("From: "+session+", To: "+contact+", Id: "+id);
+					var contact = "";
+					try{
+					    contact = sec.decode(contacts[i],privateKey);
+					}
+					logger.log("From: "+account+", To: "+contact);
 					if (typeof(db.getContact(contact)) === 'undefined'){
 						status.contacts[contact]= global.UNREGISTERED;
 					}else {
@@ -102,22 +129,22 @@ module.exports = {
 		var form = new formidable.IncomingForm()
 		var status = new Object();
 		form.parse(request, function(err, fields, files) {
-			if (typeof(fields.contact) !== 'undefined') {
+			if (typeof(fields.account) !== 'undefined') {
 				// Abria que autentificar primero
 				status.status= global.OK;
 				var min = global.myProperties.get('minNumberRandom');
 				var max = global.myProperties.get('maxNumberRandom');
 				var authcode = parseInt((Math.random() * (max-min)) );//parseInt(max) - parseInt(min));
 				authcode += parseInt(min);
-                db.addNovalidate(fields.contact,authcode);
+                db.addNovalidate(fields.account,authcode);
 				status.authcode=  authcode ;
-				logger.log("Register OK, Contact="+fields.contact+", AUTH CODE="+status.authcode);//, "Token=\"\""+status.authtoken);
+				logger.log("Register OK, Account="+fields.account+", AUTH CODE="+status.authcode);//, "Token=\"\""+status.authtoken);
 				//db.addContact(fields.contact,key.toPrivatePem().toString(),status.authcode);
 				response.set('Content-Type', 'application/json');
 				response.send(status);
 			} else {
 				status.status= global.ERR;
-				logger.log("Register ERR, Contact="+fields.contact);
+				logger.log("Register ERR, Account="+fields.account);
 				response.set('Content-Type', 'application/json');
 				response.send(status);
 			}
@@ -133,7 +160,7 @@ module.exports = {
             var status = new Object();
             var key = sec.generatePrivateKey();
 
-            status.status = db.addContact(fields.contact,key.toPrivatePem().toString(),fields.code);
+            status.status = db.addAccount(fields.account,key.toPrivatePem().toString(),fields.code);
 
             if (status.status == global.OK){
                 status.authtoken= key.toPublicPem().toString();
@@ -146,28 +173,6 @@ module.exports = {
         });
 	    logger.log("End: validation");
 	},
-
-/*	validate: function (request, response) {
-		logger.log("Start: register");
-
-		vars = request.query;
-		if (typeof(vars.contact) !== 'undefined'){
-			// Abria que autentificar primero
-			var status = new Object();
-			if (db.addContact(vars.contact)){
-				status.status= global.OK;
-			}else {
-				status.status= global.ERR_2;
-			}
-
-			response.send(status);
-		}
-		var status = new Object();
-		status.s= global.ERR;
-		response.send(status);
-		logger.log("End: register");
-
-	},*/
 
 	getContacts: function(request, response){
 		logger.log("Start: getContacts");

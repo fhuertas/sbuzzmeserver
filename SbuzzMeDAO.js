@@ -23,46 +23,56 @@ module.exports = {
 		return db[contact];
 	},
 	
-	addContact: function (contact,privateKey,code) {
-        if (typeof(db_2[contact]) !== 'undefined'){
-            if (db_2[contact].code != code){
-                db_2[contact].attempts--;
-                if (db_2[contact].attempts <= 0){
-                    logger.log("Incorrect code, Exceeded the number of attempts. Contact="+contact+" Attempts="+db_2[contact].attempts+"Stored="+db_2[contact].code+"Sended="+code);//, "Token=\"\""+status.authtoken);
-                    delete db_2[contact];
+	addAccount: function (account,privateKey,code) {
+        if (typeof(db_2[account]) !== 'undefined'){
+            if (db_2[account].code != code){
+                db_2[account].attempts--;
+                if (db_2[account].attempts <= 0){
+                    logger.log("Incorrect code, Exceeded the number of attempts. Account="+account+" Attempts="+db_2[account].attempts+"Stored="+db_2[account].code+"Sended="+code);//, "Token=\"\""+status.authtoken);
+                    delete db_2[account];
                     return global.CODE_MAX_MISTAKES;
                 }
-                logger.log("Incorrect code. Contact="+contact+" attempts="+db_2[contact].attempts+"Stored=db_2[contact].code"+"Sended="+code);//, "Token=\"\""+status.authtoken);
+                logger.log("Incorrect code. Account="+account+" attempts="+db_2[account].attempts+"Stored="+db_2[account].code+", Sended="+code);//, "Token=\"\""+status.authtoken);
                 return global.CODE_INCORRECT;
             } else {
-                db[contact] = new Object();
-                db[contact].privateKey = privateKey;
-                db[contact].regId = "";
-                logger.log("Correct code, adding contact. Contact="+contact+" Attempts="+db_2[contact].attempts+"Code="+code);//+"pivateKey="+privateKey);//, "Token=\"\""+status.authtoken);
+                db[account] = new Object();
+                db[account].privateKey = privateKey;
+                db[account].GMCId = "";
+                logger.log("Correct code, adding account. Account="+account+" Attempts="+db_2[account].attempts+"Code="+code);//+"pivateKey="+privateKey);//, "Token=\"\""+status.authtoken);
                 // El código de autenticación y los intentos guardar en memoria siempre,
-                delete db_2[contact];
+                delete db_2[account];
                 return global.OK;
             }
         }
         else {
-              logger.log("Incorrect contact. Contact="+contact+", Code="+code);
+              logger.log("Incorrect Account. account="+account+", Code="+code);
               return global.CODE_UNDEFINED;
         }
 	},
 	
-	addNovalidate: function (contact,code) {
-		db_2[contact] = new Object();
-		db_2[contact].code = code;
-		db_2[contact].attempts = global.myProperties.get('attempts');
-    	logger.log("Added to db_2 OK, Contact="+contact+", AUTH CODE="+code+", ATTEMPS="+global.myProperties.get('attempts'));//, "Token=\"\""+status.authtoken);
+	addNovalidate: function (account,code) {
+		db_2[account] = new Object();
+		db_2[account].code = code;
+		db_2[account].attempts = global.myProperties.get('attempts');
+    	logger.log("Added to db_2 OK, Account="+account+", AUTH CODE="+code+", ATTEMPS="+global.myProperties.get('attempts'));//, "Token=\"\""+status.authtoken);
 
 	},
 	
 	getContacts: function () {
 		return db;
 	},
-	
+	setGCMId : function(account,GMCId){
+        if (typeof (db[account]) !== 'undefined')
+            db[account].GMCId = GMCId;
+	},
+
+    getGMCId : function (account){
+        if (typeof (db[account]) !== 'undefined')
+            return db[account].getGMCId;
+        return "";
+    },
+
 	getContactsNovalidate: function () {
 		return db_2;
-	}
+	},
 }

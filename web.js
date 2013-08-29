@@ -36,12 +36,14 @@
 	var getContactsNovalidatePath = properties.get('getContactsNovalidatePath');
 	var listQueuePath = properties.get('listQueuePath');
 	var validatePath = properties.get('validatePath');
+	var signInPath = properties.get('signInPath');
 
 	
 	
 	logger.log("Puerto: "+_port);
 	logger.log("Path de check="+checkPath);
 	logger.log("Path de Sbuzz="+SbuzzMePath);
+	logger.log("Path de signIn="+signInPath);
 	logger.log("Path de registro="+registerPath);
 	logger.log("Path de ping="+pingPath);
 	logger.log("Path de validate="+validatePath);
@@ -60,6 +62,7 @@
 	app.post(getContactsPath,communication.getContacts);
 	app.post(pingPath,communication.ping);
 	app.post(validatePath,communication.validate);
+	app.post(signInPath,communication.signIn);
 	app.get(listQueuePath,communication.listQueue);
 	app.get('/', function(request, response) {
 	  response.send('SbuzzMeServer is runnig!');

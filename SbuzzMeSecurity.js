@@ -26,10 +26,13 @@ module.exports = {
 	    return ursa.generatePrivateKey();
 	},
 
-	regenerateKey : function(privateKey) {
-	    return ursa.createPrivateKey(privateKey.toPrivatePem())
+	regeneratePrivateKey : function(privateKey) {
+	    return ursa.createPrivateKey(privateKey)
 	},
 
+	decode: function (text, privateKey){
+        return privateKey.decrypt(text,'base64','utf8')
+	}
 
 }
 
