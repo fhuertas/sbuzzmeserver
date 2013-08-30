@@ -33,7 +33,8 @@ module.exports = {
 
                 logger.log("SIGN_IN: (contact: \""+ account_name +"\") (GCMId: \""+GCMId+"\")");
                 db.setGCMId(account_name,GCMId);
-                response.send(global.OK);
+                response.send(global.HTML_OK);
+                logger.log("SIGN_IN: (contact: \""+ account_name +"\") (GCMId: \""+GCMId+"\")");
 			} catch (e){
 			    logger.log("SIGN_IN Fail: "+e);
 				response.send(global.HTML_BAD_REQUEST);
@@ -49,7 +50,7 @@ module.exports = {
 			// Si no esta esta linea una llamada incorrecta puede petar el servicio
 			try {
 				var contacts = fields.contacts;
-				var session = fields.session;
+				var account = fields.account;
 			} catch (e){
 				response.send(global.HTML_BAD_REQUEST);
 				return;
@@ -82,43 +83,24 @@ module.exports = {
 		form.parse(request, function(err, fields, files) {
 
 			try {
-				var contacts = JSON.parse(fields.contacts);
+			    var i = 0;
 				var account = fields.account;
 				var privateKey = sec.regeneratePrivateKey(db.getContact(account).privateKey);
-
+				var SbuzzId = sec.decode(fields.sbuzzid,privateKey);
+				logger.log(fields.msg)
+				var msg = JSON.parse(fields.msg);
+                logger.log("RECIVED Sbuzz: from="+account+", sbuzzid="+SbuzzId);
+                msg.contact =  sec.decode(msg.contact,privateKey);
+                logger.log(i++);
+                msg.KeyChatId =  sec.decode(msg.KeyChatId,privateKey);
+                logger.log(i++);
+                logger.log("RECIVED Sbuzz: msg="+JSON.stringify(msg));
+				response.send(global.HTML_OK);
+				return;
 			} catch (e){
+			    logger.log(e);
 				response.send(global.HTML_BAD_REQUEST);
 				return;
-			}
-
-
-			if ((typeof(contacts) !== 'undefined') &&
-					(typeof(session) !== 'undefined')){
-				var status = new Object();
-				status.contacts = new Object();
-				for (var i = 0; i < contacts.length; i++){
-					var contact = "";
-					try{
-					    contact = sec.decode(contacts[i],privateKey);
-					}
-					logger.log("From: "+account+", To: "+contact);
-					if (typeof(db.getContact(contact)) === 'undefined'){
-						status.contacts[contact]= global.UNREGISTERED;
-					}else {
-						var direction = db.getContact(contact)
-						var result = _sbuzzme(session,direction,id);
-						if (!result){
-							queue.add(session,contact);
-							status.contacts[contact]= global.SAVED;
-						}else {
-							status.contacts[contact]= global.SEND;
-						}
-					}
-				}
-				status.status= global.OK;
-				response.send(status);
-			}else {
-				response.send(global.HTML_BAD_REQUEST);
 			}
 		});
 		logger.log("END: SbuzzMe");
@@ -156,11 +138,13 @@ module.exports = {
 	    logger.log("Start: validation");
         var form = new formidable.IncomingForm()
         form.parse(request, function(err, fields, files) {
-	        logger.log(fields);
             var status = new Object();
             var key = sec.generatePrivateKey();
 
-            status.status = db.addAccount(fields.account,key.toPrivatePem().toString(),fields.code);
+            if ((typeof (fields.account) !== 'undefined') && (typeof (fields.code) !== 'undefined')){
+                status.status = db.addAccount(fields.account,key.toPrivatePem().toString(),fields.code);
+            }
+
 
             if (status.status == global.OK){
                 status.authtoken= key.toPublicPem().toString();
