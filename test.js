@@ -1,4 +1,74 @@
-var ss = '{"contact":"ZiVgTjTC2N4FoYLONNIEJYCzQSopORXR6BSqbxdkvrDvRs3BaMug68RPJbZt9t8+tASxvl+mEdy9\nXyw9k4qY4pXgN7Mn0OfDeRgntDZP+6iafNQJVlWZ7nMYwwUd5gGr\/Ywy3W1tXTkAmE6jhByybFql\nCa9Si3s4Whq9iwTpBXM2q+XwMVwiT0YHP\/RFIkvB5JxBizhZv4cLyZukFKLazm0IAxUpBIr5SKY3\nir1Q1JShG4dY+5IT32Jdy307qZCnTRSGcn5ZbokRL+R2XVBolAZV3nuV2ZCSNFf7nPyen+2tyYhQ\nzT3xV4KIYZc47JnB1PHPxugoWQPHqsJsTPm5zA==\n","KeyChatId":"lpW7m24PdDUCpE0UJ2Zd6Qx+fGd6eKVAqL+HgYoSqTQm8Ztc1oVE6XoHQ5ZI9ktHfxwrUSXHw4b2\nrOWyCJa7TRZzOkaqROLEQDgCz87ktSZVJdX8LxaSjtbXWZ95hAeZvNf8CAYtf670WfsS\/E+gEXrG\nZxegYVx880CRyHQa+g+0M\/\/tN13XD\/Mx\/mluNfN4aySfKFD\/bWu2yUHrPPV2t3s\/Ql8uFLrUrMEQ\nvh730sPNfngs+nLqcnCH6LMc4uzGv0ejtk2JC9gUZDuCKmWNUbBSqQHW\/f8kLpPw+7noBJkp4fOu\nRb+kMwtimUzoZvElji0OPWS5iFkwWIanHL33iw==\n"}'
+var restClient = require('./SbuzzMeRestClient');
+var db = require('./SbuzzMeDAO');
+
+var origin = "(+34) 653264427"
+var contact = db.get(origin);
+
+var tt = [];
+tt[0] = contact.GCMId
+//tt[1] = contact.GCMId
+
+console.log(tt);
+
+restClient.sbuzz(tt,origin);
+
+
+
+return;
+
+
+var https = require('https');
+
+console.log(contact)
+var tt = "-"+contact;
+
+
+
+
+var datas = '{ "data": { "message": "algo", "time": "now" }, "registration_ids": ["'+ contact.GMCId+'"] }'
+var msg = JSON.parse(datas);
+
+var leng = Buffer.byteLength(datas, 'utf8');
+
+
+
+var postheaders = {
+    'Content-Type' : 'application/json',
+    'Authorization' : 'key=AIzaSyD4db5gqWO053uMJBbe8EQbizJ8qIcH5wc',
+    'Content-Length' : Buffer.byteLength(datas, 'utf8')
+};
+
+var optionspost = {
+    host : 'android.googleapis.com', // here only the domain name
+    // (no http/https !)
+    port : 443,
+    path : '/gcm/send', // the rest of the url with parameters if needed
+    method : 'POST', // do GET
+    headers : postheaders
+};
+
+
+var reqPost = https.request(optionspost, function(res) {
+    console.log("statusCode: ", res.statusCode);
+    // uncomment it for header details
+//  console.log("headers: ", res.headers);
+
+    res.on('data', function(d) {
+        console.info('POST result:\n');
+        process.stdout.write(d);
+        console.info('\n\nPOST completed');
+    });
+});
+
+reqPost.write(datas);
+reqPost.end();
+reqPost.on('error', function(e) {
+    console.error(e);
+});
+
+return ;
+
+/*var ss = '{"contact":"ZiVgTjTC2N4FoYLONNIEJYCzQSopORXR6BSqbxdkvrDvRs3BaMug68RPJbZt9t8+tASxvl+mEdy9\nXyw9k4qY4pXgN7Mn0OfDeRgntDZP+6iafNQJVlWZ7nMYwwUd5gGr\/Ywy3W1tXTkAmE6jhByybFql\nCa9Si3s4Whq9iwTpBXM2q+XwMVwiT0YHP\/RFIkvB5JxBizhZv4cLyZukFKLazm0IAxUpBIr5SKY3\nir1Q1JShG4dY+5IT32Jdy307qZCnTRSGcn5ZbokRL+R2XVBolAZV3nuV2ZCSNFf7nPyen+2tyYhQ\nzT3xV4KIYZc47JnB1PHPxugoWQPHqsJsTPm5zA==\n","KeyChatId":"lpW7m24PdDUCpE0UJ2Zd6Qx+fGd6eKVAqL+HgYoSqTQm8Ztc1oVE6XoHQ5ZI9ktHfxwrUSXHw4b2\nrOWyCJa7TRZzOkaqROLEQDgCz87ktSZVJdX8LxaSjtbXWZ95hAeZvNf8CAYtf670WfsS\/E+gEXrG\nZxegYVx880CRyHQa+g+0M\/\/tN13XD\/Mx\/mluNfN4aySfKFD\/bWu2yUHrPPV2t3s\/Ql8uFLrUrMEQ\nvh730sPNfngs+nLqcnCH6LMc4uzGv0ejtk2JC9gUZDuCKmWNUbBSqQHW\/f8kLpPw+7noBJkp4fOu\nRb+kMwtimUzoZvElji0OPWS5iFkwWIanHL33iw==\n"}'
 ss.replace(/\n/g,'')
 var ee = JSON.parse(ss);
 return ;

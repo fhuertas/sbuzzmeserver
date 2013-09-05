@@ -9,37 +9,36 @@ var db = new Object();
 db['(+34) 653264427'] = new Object();
 //db['(+34) 653264427'].privateKey = new Object()
 db['(+34) 653264427'].privateKey = "-----BEGIN RSA PRIVATE KEY-----\n"+
-                                  "MIIEowIBAAKCAQEAl1dUHuQNggJH5+vUjAIaSnh9m7vcEE45UKxFn5wy/DD78lWB\n"+
-                                  "qhSDKlQzvkyLW+ty78Lo/YoEEWoNg1coZNB1RWg7qd1iSOVhds+7YgmCNgSy9amW\n"+
-                                  "kgYl2Rd3FjrHTIJ9QVEWtUV/tV1axlaXQbfpJ01RIpRBzMeA0FQRm30uZN75IimY\n"+
-                                  "aKb8JPvdHpPEE2xDcTWMH6p2OVq6WIuJ6+S2gyXDcqtgg/o9Loi/fEvZ+rehtOzW\n"+
-                                  "jshQ6zwGCeAcIkjIx0LW0w16TdwmUS1elkuz98gEQzZ8vIsKe6ExgXGKfZioP97y\n"+
-                                  "SqRjZpgyTFUwxPI2x5RYK2KYru5KagCwfNCO6QIDAQABAoIBAHprjMNULE0PNUU4\n"+
-                                  "cf0zMjstTkXsZ23VKO3F/KfIvUFdCmCTpEiFQTi7VgPIfS5EvfuOSdPVkcbYZ8fn\n"+
-                                  "d+hc64/SafjU+M0Ip5dpICWElYzGrlCj9wV17aW3IoCb2V1dbJ6qTlkht9Voh6ZK\n"+
-                                  "ox3o+7PsCgaTsMpKUzux1XBWiXHT4XUk3Vqojyg5FcuQrmwqRSePRwoo/4TxPVXF\n"+
-                                  "NhyE1bl3oljxf9fTrLZEsKfDz8TUoBFqQ7XDFlQ+/fVePE2iUZOw2imKfnqfFLIm\n"+
-                                  "hFeyxrstOg/mvSiYBRyG7Qm18pN7oXtmWpde6neuuT0V5oSR9s4agHnvMfIzOtQX\n"+
-                                  "4xcQ4JECgYEAxnbvupTt1Qy/uEKAIbAB2w8gnxgjo9ii6q7IdVWurK17MPm+ZfWX\n"+
-                                  "Jsh7KgKOvDjLfB73GmuziblBfx9bAX9H+PzetFWJwSaHRsIj/sxVMkd7pmarA7Jw\n"+
-                                  "FahAFpkxhfmbvlNkWRzWu8W1sHag4LSo/mZvcealiiEoCNwijq+XNQUCgYEAwzce\n"+
-                                  "6JpUuYy9Ar1XtXfuRZYN4d9OQaIuYFrC/7eUa42LG3Vx2Y2fH7gJt1qIDXTec8bd\n"+
-                                  "z7ktYGnAh5meYq5oAajgM8Q95ozw1EqjOBL7UaySDYfIQpETOf5kHZz8O0UDC/kQ\n"+
-                                  "Z10+8G615HLkgNgMyI8IXe8Xxm0HMkYNWCXCV5UCgYAHLt7WXfWNtHxr6txAW+J1\n"+
-                                  "T0La/0Cq+XhMDi9rL8K2tUC0MRXXEuB5ot/yUU1hOp0CzQwchLFm1rGsLDJbB4RP\n"+
-                                  "Wrekx0PJHd/fi79JxZN/0l6DU0v1QkwUPJa1Oq40LyiX5uTG5OhQu4Mr8982wtMr\n"+
-                                  "AgIemT58lV6hk3Ycu/Y5EQKBgQCPi/W3dty8QEgwPojDUPgtxSRaJjlGO/q8MaFY\n"+
-                                  "JmcGG2PiAh+AqQoMaekDIZgPxRNasS4j8/fxAHJpg8WarMKgDc0nY7Nc1+CzSlrw\n"+
-                                  "/cw+B5aySlkw0bsAlxaJTAmRj7Ko2DF+wGtqow4veWibccMcq0iswgaKi1uSVT60\n"+
-                                  "xbc9bQKBgFdjGdwMy5rIWAovKRuLiL2VF0afwkmhDpAmJ9EkbgZPd2bc9ag8s/7K\n"+
-                                  "zronwMoQpqbB8q60DnDvPGYReVT0Ji+TxmKtgOFp2B1txjW2aPOoEbxOg2ohfbqY\n"+
-                                  "l6FmkDGMxa4pNmus5MQjb6G876n1yqd/1yqiF4VFm5fC4IAFwXG6\n"+
-                                  "-----END RSA PRIVATE KEY-----";
-db['(+34)664763824'] = global.OFFLINE
-db['(+34)123456789'] = global.ONLINE
-db['(+34)976230380'] = global.ONLINE
+                                   "MIIEpQIBAAKCAQEA1ce3VChfpvP1SBFLuCh9KUuRS2JgdfHOI65ObTrjXUVeAvRa\n"+
+                                   "FyyMPCC02OiQkcjR7lkt2BfAT6lmkoUqmI3OlbNuhBGX98CK65ysFtJKXy6Hiues\n"+
+                                   "DzUBXhWf5pHBXl7A+So68kPsqSzR7CSxo+3ZV+GrzUj14F0MOH7/l15lrHjSijbb\n"+
+                                   "l2mwllMGCXxW7NbpXPX4nwOoqhtCF2ggYgjTjCceTmOS3+JbFOe9ZbyEi5FklC6M\n"+
+                                   "Mh/Iw/vngdop4n1gYI9m6HRj4Ldljgny+D8PVruglmLZDwn2qQFJR60Wi3mOcQUw\n"+
+                                   "6gv0xrb99x1GYqNZp3/zOadG+JXEPXrXVgRP2QIDAQABAoIBAES8gmW81YSIzETv\n"+
+                                   "yrjby+KLOZxTdVB2/yDZ2r2kQZarxx6MEquA11Y97egQXuuA9n78jZD9kggLH7/c\n"+
+                                   "sWV7swDPQKmWPpaaghBfv7VWyDLycwJmmxwInvfxXAh2tQXy0XlL6sgaru12S8jx\n"+
+                                   "w2xB/bAUD3liDCynvlYr/2JcJ7TcTYC0JoopQvU8LN2Ka7jEmDG3phMvFzqGyPr9\n"+
+                                   "TtVz8iANHUCcrDA1XFYISQprUEEursbjzkwC0ICcAZ4wne70OozC4ZquAbVpnHiJ\n"+
+                                   "ryO4yEIG9r0gNjkwitQQpFdB7s6E7jqGE4piqxuKdXZxOPhiiBCpFUPkC3MCJN0E\n"+
+                                   "zZZl4EECgYEA+3wuCul8bw10g+XLh3ZOnfPJ4YAK59/nCa5cRyURW7bsIqszi8FN\n"+
+                                   "JZTHyN5H+XDwdfpLr+rUSGv6LrgKWLWes5i0rL8aZhft+9gH3sO7HkRWCEyVG3l2\n"+
+                                   "fbQ4XxU4QVl9V6B67czQeX6oNyPN9OkG8RG/FX6zL9rXagKMti4UREcCgYEA2Z4+\n"+
+                                   "w97pysk4SXTafWU6h8lkj4F1ztzjgnKwXr6Vy/OQJ5hgRfFF8YXmbfwH8vI11Bj6\n"+
+                                   "5pU6cCslp8DX1XT1fxbN6vsX8hR1ORbt9uKVreEIkv2FlZ82gmzF5aFfLsyqztPK\n"+
+                                   "0fqOnCdVhOtU9mNP0R+OQUpLLlsyfyw78pAVet8CgYEAxbaHbETMc3Kcm+XZ8ZHt\n"+
+                                   "lPjJSuQjrtC1D0NpgPV/hB933nnCeKlsQZOKzj0TUOSd5+L0BkYUxys88eX3HG8N\n"+
+                                   "ah0wTm+gDYvaqhjZdyViwxTunm+2+nav1XwOpZJFO/tjM7UTcEmJzTrqfQ9FKLrb\n"+
+                                   "nkNZe0i1D3Z5zPpcLg5kGJkCgYEAibkAd+2ngFMAcFynuhxKgo0OO1PvPs/EnFYB\n"+
+                                   "ELUFEGJApQ5mP12GqmfXgVuznCl1r5lvkGZ46WwlFJmS/uBaTegcwc3PRcF0voCo\n"+
+                                   "cUrM95InXv9bf2mXkctNIxqRpoiYwPSAs4sinei20rwstRH8/Zg+60sdcWT9/EX+\n"+
+                                   "WnCdZ3kCgYEArf9TKU5VswfpryRSvtKsKLfz4lQWpi/4meT+4w59sglJb6Rcu7Gy\n"+
+                                   "IvokDOYNt6GjnoVl2ytEVW7clm6FWAVMeB0s+I+qdL6AKejkgEycAG11B82ZbO7P\n"+
+                                   "wkYOX2/ZfCImveq+QJjzzN6y1TdIVScIn3BK4Xcr4EtwHxCocSBmrGs=\n"+
+                                   "-----END RSA PRIVATE KEY-----"
+db['(+34) 653264427'].GCMId = "APA91bFYymANKUJg8u_Kte15r3yADzCen_0IkxjkU7m_RR1ixpIDoljLGHeLLyY57sb0teEdPRx5kaXF2SJgSkLtxHQadI1tWcm0-q4-ByKFHHiUCyvqvuM0uWvZw20SXI8y926k7YmgNge9omJLl2IgWSQ-BqkMWw";
 
 var db_2 = new Object();
+
 
 module.exports = {
 	get: function(key){
@@ -65,7 +64,7 @@ module.exports = {
                 db[account] = new Object();
                 logger.log(privateKey);
                 db[account].privateKey = privateKey;
-                db[account].GMCId = "";
+                db[account].GCMId = "";
                 logger.log("Correct code, adding account. Account="+account+" Attempts="+db_2[account].attempts+"Code="+code);//+"pivateKey="+privateKey);//, "Token=\"\""+status.authtoken);
                 // El código de autenticación y los intentos guardar en memoria siempre,
                 delete db_2[account];
@@ -89,14 +88,14 @@ module.exports = {
 	getContacts: function () {
 		return db;
 	},
-	setGCMId : function(account,GMCId){
+	setGCMId : function(account,GCMId){
         if (typeof (db[account]) !== 'undefined')
-            db[account].GMCId = GMCId;
+            db[account].GCMId = GCMId;
 	},
 
-    getGMCId : function (account){
+    getGCMId : function (account){
         if (typeof (db[account]) !== 'undefined')
-            return db[account].getGMCId;
+            return db[account].getGCMId;
         return "";
     },
 

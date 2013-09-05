@@ -1,0 +1,48 @@
+var ServerKey = "AIzaSyD4db5gqWO053uMJBbe8EQbizJ8qIcH5wc";
+var https = require('https');
+var logger = require('./log.js');
+
+
+module.exports = {
+
+    sbuzz : function  (listContacts, origin, sbuzzid, chatid) {
+        logger.log(listContacts)
+        var stringContacts= listContacts;
+        var stringMsg = JSON.stringify({
+            "registration_ids" : listContacts,
+            "collapse_key" : "sbuzz" ,
+            "from" : origin,
+            "data" : {
+                "from_" : origin
+            }
+        });
+        var postheaders = {
+            'Content-Type' : 'application/json',
+            'Authorization' : 'key='+ServerKey,
+            'Content-Length' : Buffer.byteLength(stringMsg, 'utf8')
+        };
+
+        var optionspost = {
+            host : 'android.googleapis.com', // here only the domain name
+            // (no http/https !)
+            port : 443,
+            path : '/gcm/send', // the rest of the url with parameters if needed
+            method : 'POST', // do GET
+            headers : postheaders
+        };
+
+        var reqPost = https.request(optionspost, function(res) {
+            logger.log("POST CALL (Sbuzz): statusCode: ", res.statusCode);
+            res.on('data', function(d) {
+                logger.log('POST CALL (Sbuzz) result:\n');
+                process.stdout.write(d);
+                logger.log('POST CALL (Sbuzz):  completed');
+            });
+        });
+        reqPost.write(stringMsg);
+        reqPost.end();
+        reqPost.on('error', function(e) {
+            logger.log(e);
+        });
+    }
+}

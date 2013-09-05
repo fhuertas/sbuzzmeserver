@@ -11,6 +11,7 @@ var qs = require('querystring');
 var url = require("url");
 var queue = require('./SbuzzMeQueue');
 var ursa = require('ursa');
+var client = require('./SbuzzMeRestClient');
 formidable = require('formidable')
 
 function _sbuzzme(direction){
@@ -50,12 +51,12 @@ module.exports = {
 			// Si no esta esta linea una llamada incorrecta puede petar el servicio
 			try {
 				var contacts = fields.contacts;
-				var account = fields.account;
+				//var account = fields.account;
 			} catch (e){
 				response.send(global.HTML_BAD_REQUEST);
 				return;
 			}
-			if (typeof(contacts) !== 'undefined' && typeof(session) !== 'undefined'){
+			if (typeof(contacts) !== 'undefined'){// && typeof(session) !== 'undefined'){
 				var status = new Object();
 				status['status'] = global.OK;
 				status['contacts'] = new Object();
@@ -64,7 +65,7 @@ module.exports = {
 					contact = contacts[i];
 					var statusContact = db.get(contact);
 					if (typeof (statusContact) !== 'undefined'){
-						status['contacts'][contact] = db.get(contact);
+						status['contacts'][contact] = "online";
 					}
 				}
 				logger.log(status['contacts']);
@@ -95,6 +96,9 @@ module.exports = {
                 msg.KeyChatId =  sec.decode(msg.KeyChatId,privateKey);
                 logger.log(i++);
                 logger.log("RECIVED Sbuzz: msg="+JSON.stringify(msg));
+                var contacts = [];
+                contacts[0] = db.get(msg.contact).GCMId;
+                client.sbuzz(contacts,account,SbuzzId,msg.KeyChatId)
 				response.send(global.HTML_OK);
 				return;
 			} catch (e){
@@ -177,6 +181,7 @@ module.exports = {
     		response.send("200");
     		logger.log("End: ping");
     }
+
 }
 
 
