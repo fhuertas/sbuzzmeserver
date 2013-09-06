@@ -28,6 +28,7 @@
 
         pg.connect(process.env.DATABASE_URL, function(err, client) {
             logger.log("Conectado: "+client)
+            var query = client.query('CREATE ROLE sbuzzme')
 //          var query = client.query('SELECT * FROM your_table');
 //
 //          query.on('row', function(row) {
