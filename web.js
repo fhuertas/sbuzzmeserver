@@ -22,22 +22,6 @@
 	var security = require('./SbuzzMeSecurity');
 
 
-	var database = true
-    if (database){
-        var pg = require('pg');
-
-        pg.connect(process.env.DATABASE_URL, function(err, client) {
-            logger.log("Error: "+err)
-            logger.log("Conectado: "+client)
-            //var query = client.query('CREATE ROLE sbuzzme')
-//          var query = client.query('SELECT * FROM your_table');
-//
-//          query.on('row', function(row) {
-//            console.log(JSON.stringify(row));
-//          });
-        });
-    }
-
 
 	var properties = parser.createEditor(configFile);
 	global.myProperties = properties;
