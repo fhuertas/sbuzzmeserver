@@ -1,18 +1,29 @@
 var restClient = require('./SbuzzMeRestClient');
 var db = require('./SbuzzMeDAO');
 
-var origin = "(+34) 653264427"
-var contact = db.get(origin);
 
+var to = "(+34) 653264427"
+var from = "(+34) 653264427"
+var contact = db.get(to);
 var tt = [];
 tt[0] = contact.GCMId
-//tt[1] = contact.GCMId
-
 console.log(tt);
+restClient.sbuzz(tt,from);
 
-restClient.sbuzz(tt,origin);
 
+from = "Periiirque"
+contact = db.get(to);
+tt = [];
+tt[0] = contact.GCMId
+console.log(tt);
+restClient.sbuzz(tt,from);
 
+from = "BumBum"
+contact = db.get(to);
+tt = [];
+tt[0] = contact.GCMId
+console.log(tt);
+restClient.sbuzz(tt,from);
 
 return;
 

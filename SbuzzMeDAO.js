@@ -9,32 +9,32 @@ var db = new Object();
 db['(+34) 653264427'] = new Object();
 //db['(+34) 653264427'].privateKey = new Object()
 db['(+34) 653264427'].privateKey = "-----BEGIN RSA PRIVATE KEY-----\n"+
-                                   "MIIEpQIBAAKCAQEA1ce3VChfpvP1SBFLuCh9KUuRS2JgdfHOI65ObTrjXUVeAvRa\n"+
-                                   "FyyMPCC02OiQkcjR7lkt2BfAT6lmkoUqmI3OlbNuhBGX98CK65ysFtJKXy6Hiues\n"+
-                                   "DzUBXhWf5pHBXl7A+So68kPsqSzR7CSxo+3ZV+GrzUj14F0MOH7/l15lrHjSijbb\n"+
-                                   "l2mwllMGCXxW7NbpXPX4nwOoqhtCF2ggYgjTjCceTmOS3+JbFOe9ZbyEi5FklC6M\n"+
-                                   "Mh/Iw/vngdop4n1gYI9m6HRj4Ldljgny+D8PVruglmLZDwn2qQFJR60Wi3mOcQUw\n"+
-                                   "6gv0xrb99x1GYqNZp3/zOadG+JXEPXrXVgRP2QIDAQABAoIBAES8gmW81YSIzETv\n"+
-                                   "yrjby+KLOZxTdVB2/yDZ2r2kQZarxx6MEquA11Y97egQXuuA9n78jZD9kggLH7/c\n"+
-                                   "sWV7swDPQKmWPpaaghBfv7VWyDLycwJmmxwInvfxXAh2tQXy0XlL6sgaru12S8jx\n"+
-                                   "w2xB/bAUD3liDCynvlYr/2JcJ7TcTYC0JoopQvU8LN2Ka7jEmDG3phMvFzqGyPr9\n"+
-                                   "TtVz8iANHUCcrDA1XFYISQprUEEursbjzkwC0ICcAZ4wne70OozC4ZquAbVpnHiJ\n"+
-                                   "ryO4yEIG9r0gNjkwitQQpFdB7s6E7jqGE4piqxuKdXZxOPhiiBCpFUPkC3MCJN0E\n"+
-                                   "zZZl4EECgYEA+3wuCul8bw10g+XLh3ZOnfPJ4YAK59/nCa5cRyURW7bsIqszi8FN\n"+
-                                   "JZTHyN5H+XDwdfpLr+rUSGv6LrgKWLWes5i0rL8aZhft+9gH3sO7HkRWCEyVG3l2\n"+
-                                   "fbQ4XxU4QVl9V6B67czQeX6oNyPN9OkG8RG/FX6zL9rXagKMti4UREcCgYEA2Z4+\n"+
-                                   "w97pysk4SXTafWU6h8lkj4F1ztzjgnKwXr6Vy/OQJ5hgRfFF8YXmbfwH8vI11Bj6\n"+
-                                   "5pU6cCslp8DX1XT1fxbN6vsX8hR1ORbt9uKVreEIkv2FlZ82gmzF5aFfLsyqztPK\n"+
-                                   "0fqOnCdVhOtU9mNP0R+OQUpLLlsyfyw78pAVet8CgYEAxbaHbETMc3Kcm+XZ8ZHt\n"+
-                                   "lPjJSuQjrtC1D0NpgPV/hB933nnCeKlsQZOKzj0TUOSd5+L0BkYUxys88eX3HG8N\n"+
-                                   "ah0wTm+gDYvaqhjZdyViwxTunm+2+nav1XwOpZJFO/tjM7UTcEmJzTrqfQ9FKLrb\n"+
-                                   "nkNZe0i1D3Z5zPpcLg5kGJkCgYEAibkAd+2ngFMAcFynuhxKgo0OO1PvPs/EnFYB\n"+
-                                   "ELUFEGJApQ5mP12GqmfXgVuznCl1r5lvkGZ46WwlFJmS/uBaTegcwc3PRcF0voCo\n"+
-                                   "cUrM95InXv9bf2mXkctNIxqRpoiYwPSAs4sinei20rwstRH8/Zg+60sdcWT9/EX+\n"+
-                                   "WnCdZ3kCgYEArf9TKU5VswfpryRSvtKsKLfz4lQWpi/4meT+4w59sglJb6Rcu7Gy\n"+
-                                   "IvokDOYNt6GjnoVl2ytEVW7clm6FWAVMeB0s+I+qdL6AKejkgEycAG11B82ZbO7P\n"+
-                                   "wkYOX2/ZfCImveq+QJjzzN6y1TdIVScIn3BK4Xcr4EtwHxCocSBmrGs=\n"+
-                                   "-----END RSA PRIVATE KEY-----"
+                                           "MIIEowIBAAKCAQEA8eHtIWugOA0Fg1rvgFvnKwKgluqWptNn75Pb0gSxD/xhpIza\n"+
+                                           "IbXkyDDww73X4TF07hYwg6gHG469riQpqL8r6YjNpLmSrgyMCVmpPqgxe3T8/8TX\n"+
+                                           "Rj6Jkl8H5gOR/vsJyjmslKceiGBf7o7lgah86CAQQi7tnpjTi/Xpz9EvUeNpF6vy\n"+
+                                           "GYAv831iAHaEdKiJZKjImMvitjIznMyUHNMhKazUEFnrS02DprKvZjUm+lk/bvBd\n"+
+                                           "xQJ0dqQKU7OTGMqWB8uhgLAAvnsYzFHj7u1YoL+2LOsrhIit7xlxl2w2wO4xELi5\n"+
+                                           "K76cvhGXU1gXsrgbJsei1+sZYQgoXUTltD/Y1wIDAQABAoIBADE9GYWNIC9ozy9/\n"+
+                                           "KnQJwVQrE7/E/2f0bxsBEWV+WQD1EndpyNnF6k2qUMi386M+6xuwXq3eXZwJgala\n"+
+                                           "aTSVvf2rQJmAwVA286bPnrlHidMk7H+wdVYyUtT+DWCQZ37tYX/OH8ifAIMogz7P\n"+
+                                           "zf6H6u1h4Y1nei2n1KCQLcmFPsm/SQU2u1I6ZfrLpvwRcebtL1qvLipQg4BkvuxA\n"+
+                                           "WTTIA3Bv36Wz422I7R2Sgz7nsUW7sEGPWACeKUxFidqh2m8RaGhCx7yWS4HtGoRI\n"+
+                                           "ffH6WT9YS5m++HJhb6ce2R6sxYC+GWLdAQd4Xfuvd9IeTEInVCBf9WCwwG0tQyQK\n"+
+                                           "yuqYL/ECgYEA/tacRnuVRYxY4Cxx981aFVPB5RhqKma34ZNY41qW68qTbdi+YdCW\n"+
+                                           "5RlHWnOacg8l49Ud0PWM0N55XYyZ+fxYynQCA1FFHoDUHybUlsKBCH58YZgJ8vVF\n"+
+                                           "FYqudtkKClDOUm5t9+Zr0aU6hZM3/f916yKiqp/qDIgwAPaClo91SH8CgYEA8vwy\n"+
+                                           "X3nPM+mAFMNzDyt1jhujMWFIViQ4nIJlD0f1eUXIcH3PSYOv3x0dBnAGS7xhWp4S\n"+
+                                           "JpKDIWh8OcF7tcMB/b5dQgN5Y4gmuhDj0t+L5MvwzLkPJ9bcPiybVL/EZgOjQQkj\n"+
+                                           "K5GNtsZgYDjcLvPz1WldVRS2jm53eUtIHVdGg6kCgYAPEVtuI3KBCTpcDuSyNTcl\n"+
+                                           "Wa12QUpNtYMb2F2CG+IekPzEmvMuz2mMpED+zSUNp22jGf/IUiyAURc1+9FC4bPS\n"+
+                                           "TKet0IlYs19XdDFPtLJycSAjmRzFe9EY4/lK16xrTbnVT+g6pyoq3C0oprrBzvAG\n"+
+                                           "9iZOFmR9VzQXanvwMQ1LOwKBgBJcLBI6ygVKJ3tqKU+EISXTwMkCaMzZf82TrL8y\n"+
+                                           "2MGJHFQjrX4IjUl2kbLi1Bb07QZD22s+ttnXY0uZ6xcY3RWnRLSwPoPezc5RaGWO\n"+
+                                           "rqtjHZbahOKlwY6RIEuPEfADZlqLrjSkkui0pKOgqEKD/HCrvXmoTwMEJdLsdU6C\n"+
+                                           "QbnBAoGBAO1k6zHCpWmzZb7yPBC4GPg9TemPNMmHmAP7sEocDJYvcN2Jak7Pp0Yu\n"+
+                                           "4cUbnvLVohimHbQ7yiFFAEJi/4RV5flIMu8iytWWoMGuD+t5JCykoxwIqjgrt1Ea\n"+
+                                           "5dbmWWAP8E9Dzg05+kqc/gcLnrylttSZUxTWxmqRjc/UfE8qylmH\n"+
+                                           "-----END RSA PRIVATE KEY-----"
 db['(+34) 653264427'].GCMId = "APA91bFYymANKUJg8u_Kte15r3yADzCen_0IkxjkU7m_RR1ixpIDoljLGHeLLyY57sb0teEdPRx5kaXF2SJgSkLtxHQadI1tWcm0-q4-ByKFHHiUCyvqvuM0uWvZw20SXI8y926k7YmgNge9omJLl2IgWSQ-BqkMWw";
 
 var db_2 = new Object();
@@ -104,6 +104,6 @@ module.exports = {
 	},
 
 	getContactsFromChat: function(chatId){
-	    return contact;
+	    return chatId;
 	}
 }

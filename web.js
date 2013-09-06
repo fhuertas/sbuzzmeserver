@@ -21,7 +21,22 @@
 
 	var security = require('./SbuzzMeSecurity');
 
-	
+
+	var database = true
+    if (database){
+        var pg = require('pg');
+
+        pg.connect(process.env.DATABASE_URL, function(err, client) {
+            logger.log("Conectado"+client)
+//          var query = client.query('SELECT * FROM your_table');
+//
+//          query.on('row', function(row) {
+//            console.log(JSON.stringify(row));
+//          });
+        });
+    }
+
+
 	var properties = parser.createEditor(configFile);
 	global.myProperties = properties;
 	logger.log(global.myProperties.get('attempts'));
@@ -68,24 +83,24 @@
 	  response.send('SbuzzMeServer is runnig!');
 	});
 
-    var count = 0;
-    app.get('/gcm',function(req, res) {
-        var message= new gcm.Message;
-        //message
-        message.addData('message', 'Hello World. Count='+(count++));
-        //_.intersection(registrationIds, req.body.receptors.split(','));
-        sender.send(message, registrationIds, 4, function(result) {
-            console.log(result);
-        });
-        res.send(200);
-    });
-
-    app.get('/ind',function(req, res) {
-       res.render('index', {
-          title: 'Express',
-          receptors: registrationIds
-        });
-    });
+//    var count = 0;
+//    app.get('/gcm',function(req, res) {
+//        var message= new gcm.Message;
+//        //message
+//        message.addData('message', 'Hello World. Count='+(count++));
+//        //_.intersection(registrationIds, req.body.receptors.split(','));
+//        sender.send(message, registrationIds, 4, function(result) {
+//            console.log(result);
+//        });
+//        res.send(200);
+//    });
+//
+//    app.get('/ind',function(req, res) {
+//       res.render('index', {
+//          title: 'Express',
+//          receptors: registrationIds
+//        });
+//    });
 	var port = process.env.PORT || _port;
 	app.listen(port, function() {
 	  console.log("Listening on " + port);

@@ -51,7 +51,9 @@ module.exports = {
 			// Si no esta esta linea una llamada incorrecta puede petar el servicio
 			try {
 				var contacts = fields.contacts;
-				//var account = fields.account;
+				var account = fields.account;
+				var contact = db.getContact(account);
+				var privateKey = sec.regeneratePrivateKey(contact.privateKey);
 			} catch (e){
 				response.send(global.HTML_BAD_REQUEST);
 				return;
@@ -62,10 +64,11 @@ module.exports = {
 				status['contacts'] = new Object();
 
 				for (var i = 0; i < contacts.length; i++){
-					contact = contacts[i];
+				    logger.log(contacts[i],privateKey);
+					contact = sec.decode(contacts[i],privateKey);
 					var statusContact = db.get(contact);
 					if (typeof (statusContact) !== 'undefined'){
-						status['contacts'][contact] = "online";
+						status['contacts'][contacts[i]] = "online";
 					}
 				}
 				logger.log(status['contacts']);
