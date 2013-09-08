@@ -1,6 +1,11 @@
 var restClient = require('./SbuzzMeRestClient');
 var db = require('./SbuzzMeDAO');
 
+var number = "(+34) 653264427"
+car code = "0000";
+
+db.addNovalidate(number,code);
+return;
 
 var to = "(+34) 653264427"
 var from = "(+34) 653264427"

@@ -1,3 +1,37 @@
+/* DATABASE INFO */
+var conString =  process.env.DATABASE_URL || {
+	host: 'ec2-23-21-196-147.compute-1.amazonaws.com',
+	port: '5432',
+	user: 'bqatgfwygpobil',
+	password: 'KtdCcNmFYvYAghMzjogFjQ8Z6t',
+	database: 'd14166nrb986gg',
+	ssl: true };
+// TABLE
+// id       | account   | privateKeyId | GCMId      |
+//          |           |              |            |
+//          |           |              |            |
+//          |           |              |            |
+//          |           |              |            |
+
+
+/* SQL Sentences */
+
+var SQL_CREATE_TABLE = 'CREATE TABLE users ('+
+    'id             serial primary key,' +
+    'account        varchar(40),' +
+    'privateKeyid   varchar(2800),' +
+    'GCMId          varchar(200)' +
+')';
+
+var SQL_DROP_TABLE = 'DROP TABLE users'
+
+// NOTA, nadie tienta % en los datos
+var SQL_ADD_ROW = "INSERT INTO users (account, privateKeyid, GCMId) VALUES ('%1', '%2', '%3');"
+
+var SQL_SELECT_ALL = "SELECT * FROM users";
+
+var SQL_SELECT_WHERE = "SELECT * FROM users WHERE %1"
+
 var ONLINE_STATUS = "online";
 var OFFLINE_STATUS = "offline";
 var UNREGISTER_STATUS = "unregister";
@@ -40,6 +74,28 @@ db['(+34) 653264427'].GCMId = "APA91bFYymANKUJg8u_Kte15r3yADzCen_0IkxjkU7m_RR1ix
 
 var db_2 = new Object();
 
+var sql_exec = function (consult, callback){
+client.connect(function(err) {
+    if(err) {
+        logger.log (err)
+        result.status = Global.ERR;
+        callback(result);
+    }
+
+    client.query(consult, function(err, result) {
+        if(err) {
+            logger.log (err)
+            result.status = Global.ERR;
+            callback(result);
+        } else {
+            result.status = Global.OK;
+            result.result = result;
+            logger.log("OK:"+result)
+            logger.log("Results: %j",result)
+        }
+    });
+});
+}
 
 module.exports = {
 	get: function(key){
@@ -50,18 +106,38 @@ module.exports = {
 		return db[contact];
 	},
 	
-	addAccount: function (account,privateKey,code) {
+	addAccount: function (account,privateKey,code, callback) {
+	    result = new Object()
         if (typeof(db_2[account]) !== 'undefined'){
             if (db_2[account].code != code){
                 db_2[account].attempts--;
                 if (db_2[account].attempts <= 0){
                     logger.log("Incorrect code, Exceeded the number of attempts. Account="+account+" Attempts="+db_2[account].attempts+"Stored="+db_2[account].code+"Sended="+code);//, "Token=\"\""+status.authtoken);
                     delete db_2[account];
-                    return global.CODE_MAX_MISTAKES;
+                    result.status =  global.CODE_MAX_MISTAKES;
+                    callback(result);
                 }
                 logger.log("Incorrect code. Account="+account+" attempts="+db_2[account].attempts+"Stored="+db_2[account].code+", Sended="+code);//, "Token=\"\""+status.authtoken);
-                return global.CODE_INCORRECT;
+                result.status = global.CODE_INCORRECT;
+                callback(result);
             } else {
+                sql_exec(SQL_SELECT_WHERE.replace('%1',' id = '+ account) + " ",function(results){
+                    if (results.status != Global.OK) {
+                        callback(result);
+                    }
+                    else { // check if 0 return results
+                        if (typeof (results.rows) !== 'undefined') {
+                            if ((results.length) == 0) {
+                                var consult = SQL_ADD_ROW.replace('%1', account)
+                                consult = consult.replace('%2',  privateKey)
+                                consult = consult.replace('%3', '')
+                                sql_exec(consult  + " ",callback );
+                            } else {//if ((results.length) > 0) {
+                                // YA existe
+                            }
+                        }
+                    }
+                })
                 db[account] = new Object();
                 logger.log(privateKey);
                 db[account].privateKey = privateKey;
@@ -69,7 +145,7 @@ module.exports = {
                 logger.log("Correct code, adding account. Account="+account+" Attempts="+db_2[account].attempts+"Code="+code);//+"pivateKey="+privateKey);//, "Token=\"\""+status.authtoken);
                 // El código de autenticación y los intentos guardar en memoria siempre,
                 delete db_2[account];
-                return global.OK;
+                result.status =  global.OK;
             }
         }
         else {

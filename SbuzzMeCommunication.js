@@ -149,18 +149,28 @@ module.exports = {
             var key = sec.generatePrivateKey();
 
             if ((typeof (fields.account) !== 'undefined') && (typeof (fields.code) !== 'undefined')){
-                status.status = db.addAccount(fields.account,key.toPrivatePem().toString(),fields.code);
+                status.status = db.addAccount(fields.account,key.toPrivatePem().toString(),fields.code, function (result){
+
+                    if (result.status == global.OK){
+                        result.authtoken= key.toPublicPem().toString();
+                        result.authtoken = status.authtoken.split("-----")[2];
+                        result.authtoken = status.authtoken.replace(/\n/g,'');
+                        response.send(result);
+                    }else {
+                        response.send(result);
+                    }
+                });
             }
 
 
-            if (status.status == global.OK){
-                status.authtoken= key.toPublicPem().toString();
-                status.authtoken = status.authtoken.split("-----")[2];
-                status.authtoken = status.authtoken.replace(/\n/g,'');
-				response.send(status);
-            }else {
-				response.send(status);
-            }
+//            if (status.status == global.OK){
+//                status.authtoken= key.toPublicPem().toString();
+//                status.authtoken = status.authtoken.split("-----")[2];
+//                status.authtoken = status.authtoken.replace(/\n/g,'');
+//				response.send(status);
+//            }else {
+//				response.send(status);
+//            }
         });
 	    logger.log("End: validation");
 	},
