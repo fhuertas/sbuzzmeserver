@@ -1,4 +1,4 @@
-var pg = require('pg'); 
+var pg = require('pg');
 //or native libpq bindings
 //var pg = require('pg').native
 
@@ -43,7 +43,7 @@ var conString =  process.env.DATABASE_URL || {
 
 var SQL_CREATE_TABLE = 'CREATE TABLE users ('+
     'id             serial primary key,' +
-    'account        varchar(40),' +
+    'account        varchar(40) unique,' +
     'privateKeyid   varchar(2800),' +
     'GCMId          varchar(200)' +
 ')';
@@ -54,9 +54,10 @@ var SQL_ADD_ROW = "INSERT INTO users (account, privateKeyid, GCMId) VALUES ('"+a
 var SQL_SELECT_ALL = "SELECT * FROM users";
 
 var consult =     SQL_CREATE_TABLE;
-var consult =     SQL_ADD_ROW;
-//var consult =     SQL_DROP_TABLE;
+var consult =     SQL_DROP_TABLE;
+var consult =     SQL_CREATE_TABLE;
 var consult =     SQL_SELECT_ALL;
+var consult =     SQL_ADD_ROW;
 console.log(consult)
 //var host = "postgres://ec2-23-21-196-147.compute-1.amazonaws.com:5432/d14166nrb986gg'
 // Create DB connection params
@@ -72,7 +73,7 @@ client.connect(function(err) {
                 client.end();
             }else {
                 console.log("OK:"+result)
-                console.log("%j",result.rows)
+                console.log("%j",result)
 
 //                for (var e  result){
 //                    console.log("-"+e)

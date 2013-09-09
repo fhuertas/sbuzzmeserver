@@ -1,10 +1,39 @@
+var configFile = "config.properties";
+var sec = require('./SbuzzMeSecurity');
+
+var parser = require('properties-parser');
+var properties = parser.createEditor(configFile);
+global.myProperties = properties;
+
 var restClient = require('./SbuzzMeRestClient');
 var db = require('./SbuzzMeDAO');
 
 var number = "(+34) 653264427"
-car code = "0000";
+var number = "666"
+var number = "(+34) 653264427"
+var code = "0000";
+var key = sec.generatePrivateKey();
 
-db.addNovalidate(number,code);
+/*db.addNovalidate(number,"0000");
+db.addAccount(number,key.toPrivatePem().toString(),"0000",function(results){
+    console.log("%j",results);
+    return;
+})*/
+/*db.getContact(number, function(results) {
+    console.log("%j", results);
+})*/
+
+
+db.getGCMId(number, function(results) {
+    console.log("-------------------------------------")
+    console.log("%j", results);
+})
+//db.getContacts(function(results) {
+//    console.log("-------------------------------------")
+//    console.log("%j", results);
+//    return;
+//})
+
 return;
 
 var to = "(+34) 653264427"

@@ -66,7 +66,7 @@ module.exports = {
 				for (var i = 0; i < contacts.length; i++){
 				    logger.log(contacts[i],privateKey);
 					contact = sec.decode(contacts[i],privateKey);
-					var statusContact = db.get(contact);
+					var statusContact = db.getContact(contact);
 					if (typeof (statusContact) !== 'undefined'){
 						status['contacts'][contacts[i]] = "online";
 					}
@@ -100,7 +100,7 @@ module.exports = {
                 logger.log(i++);
                 logger.log("RECIVED Sbuzz: msg="+JSON.stringify(msg));
                 var contacts = [];
-                contacts[0] = db.get(msg.contact).GCMId;
+                contacts[0] = db.getContact(msg.contact).GCMId;
                 client.sbuzz(contacts,account,SbuzzId,msg.KeyChatId)
 				response.send(global.HTML_OK);
 				return;
@@ -150,15 +150,16 @@ module.exports = {
 
             if ((typeof (fields.account) !== 'undefined') && (typeof (fields.code) !== 'undefined')){
                 status.status = db.addAccount(fields.account,key.toPrivatePem().toString(),fields.code, function (result){
-
                     if (result.status == global.OK){
                         result.authtoken= key.toPublicPem().toString();
                         result.authtoken = status.authtoken.split("-----")[2];
                         result.authtoken = status.authtoken.replace(/\n/g,'');
+                        logger.log("Correct code, adding account. Account="+account+" Attempts="+db_2[account].attempts+"Code="+code);//+"pivateKey="+privateKey);//, "Token=\"\""+status.authtoken);
                         response.send(result);
                     }else {
                         response.send(result);
                     }
+                    response.end();
                 });
             }
 
@@ -177,7 +178,8 @@ module.exports = {
 
 	getContacts: function(request, response){
 		logger.log("Start: getContacts");
-		logger.log(db.getContacts());
+		db.getContacts()
+		logger.log();
 		response.send(db.getContacts());
 		logger.log("end: getContacts");
 	},

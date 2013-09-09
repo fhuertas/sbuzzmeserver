@@ -1,3 +1,8 @@
+// REQUIRES
+require('./SbuzzMeConstants');
+var pg = require('pg');
+
+
 /* DATABASE INFO */
 var conString =  process.env.DATABASE_URL || {
 	host: 'ec2-23-21-196-147.compute-1.amazonaws.com',
@@ -6,6 +11,7 @@ var conString =  process.env.DATABASE_URL || {
 	password: 'KtdCcNmFYvYAghMzjogFjQ8Z6t',
 	database: 'd14166nrb986gg',
 	ssl: true };
+var client = new pg.Client(conString);
 // TABLE
 // id       | account   | privateKeyId | GCMId      |
 //          |           |              |            |
@@ -18,10 +24,11 @@ var conString =  process.env.DATABASE_URL || {
 
 var SQL_CREATE_TABLE = 'CREATE TABLE users ('+
     'id             serial primary key,' +
-    'account        varchar(40),' +
+    'account        varchar(40) unique,' +
     'privateKeyid   varchar(2800),' +
     'GCMId          varchar(200)' +
 ')';
+
 
 var SQL_DROP_TABLE = 'DROP TABLE users'
 
@@ -32,11 +39,11 @@ var SQL_SELECT_ALL = "SELECT * FROM users";
 
 var SQL_SELECT_WHERE = "SELECT * FROM users WHERE %1"
 
-var ONLINE_STATUS = "online";
-var OFFLINE_STATUS = "offline";
-var UNREGISTER_STATUS = "unregister";
-var UNKNOW_STATUS = "unknow";
+var SQL_UPDATE = "UPDATE users SET %1 WHERE %2"
+
 var logger = require('./log.js');
+
+
 // Base de datos temporal, posiblemente luego si esta establecido guarde el socket o offline si esta desctivada
 // Problemas paises
 var db = new Object();
@@ -75,36 +82,61 @@ db['(+34) 653264427'].GCMId = "APA91bFYymANKUJg8u_Kte15r3yADzCen_0IkxjkU7m_RR1ix
 var db_2 = new Object();
 
 var sql_exec = function (consult, callback){
-client.connect(function(err) {
-    if(err) {
-        logger.log (err)
-        result.status = Global.ERR;
-        callback(result);
-    }
 
-    client.query(consult, function(err, result) {
+    var client = new pg.Client(conString);
+    client.connect(function(err) {
         if(err) {
             logger.log (err)
-            result.status = Global.ERR;
+            result.status = global.ERR;
             callback(result);
-        } else {
-            result.status = Global.OK;
-            result.result = result;
-            logger.log("OK:"+result)
-            logger.log("Results: %j",result)
         }
+        var query = client.query(consult, function(err, result) {
+            var results = new Object();
+            if(err) {
+
+                logger.log (err)
+                results.status = global.ERR;
+                callback(results);
+            } else {
+                results.status = global.OK;
+                results.result = result;
+//                    console.log("OK:"+result)
+                console.log("Results: %j",result)
+                callback(results)
+            }
+            return;
+        });
+        query.on('end', function() {
+            client.end();
+        });
+        return;
     });
-});
+    return;
+}
+
+var getContact = function(contact, callback){
+    var consult = SQL_SELECT_WHERE.replace('%1', "account='"+contact+"'")
+    sql_exec(consult,function(results){
+        if (results.status != global.OK){
+            callback(result);
+        }else {
+            var res = new Object
+            if (results.result.rowCount > 0) {
+                res.status = global.OK;
+                res.result = results.result.rows[0];
+            } else {
+                res.status = global.OK;
+            }
+            callback(res);
+        }
+
+    })
+
+
 }
 
 module.exports = {
-	get: function(key){
-		var response;
-		return response = db[key];
-	},
-	getContact: function (contact) {
-		return db[contact];
-	},
+	getContact: getContact,
 	
 	addAccount: function (account,privateKey,code, callback) {
 	    result = new Object()
@@ -121,37 +153,43 @@ module.exports = {
                 result.status = global.CODE_INCORRECT;
                 callback(result);
             } else {
-                sql_exec(SQL_SELECT_WHERE.replace('%1',' id = '+ account) + " ",function(results){
-                    if (results.status != Global.OK) {
+                delete db_2[account];
+                var consult = SQL_SELECT_WHERE.replace('%1'," account = '"+ account+"'");
+//                console.log(consult);
+                sql_exec(consult,function(results){
+                    if (results.status != global.OK) {
                         callback(result);
                     }
                     else { // check if 0 return results
-                        if (typeof (results.rows) !== 'undefined') {
-                            if ((results.length) == 0) {
+                        // REMOVE
+                        // -----BEGIN RSA PRIVATE KEY-----
+                        // -----END RSA PRIVATE KEY-----
+                        privateKey = privateKey.split("-----")[2]
+                        if (typeof (results.result.rowCount) !== 'undefined') {
+                            if ((results.result.rowCount) == 0) {
                                 var consult = SQL_ADD_ROW.replace('%1', account)
                                 consult = consult.replace('%2',  privateKey)
                                 consult = consult.replace('%3', '')
-                                sql_exec(consult  + " ",callback );
-                            } else {//if ((results.length) > 0) {
-                                // YA existe
+                                sql_exec(consult,callback );
+                            } else {
+                                //var result = //if ((results.length) > 0) {
+                                var consult = SQL_UPDATE.replace('%1',"privateKeyid='"+privateKey+"',GCMId=''")// YA existe
+                                consult = consult .replace('%2',"account='"+account+"'")// YA existe
+//                                console.log(consult);
+                                sql_exec(consult,callback);
                             }
                         }
                     }
                 })
-                db[account] = new Object();
-                logger.log(privateKey);
-                db[account].privateKey = privateKey;
-                db[account].GCMId = "";
-                logger.log("Correct code, adding account. Account="+account+" Attempts="+db_2[account].attempts+"Code="+code);//+"pivateKey="+privateKey);//, "Token=\"\""+status.authtoken);
                 // El código de autenticación y los intentos guardar en memoria siempre,
-                delete db_2[account];
-                result.status =  global.OK;
             }
         }
         else {
               logger.log("Incorrect Account. account="+account+", Code="+code);
-              return global.CODE_UNDEFINED;
+              result.status = CODE_UNDEFINED;
+              callback(result)
         }
+        return;
 	},
 	
 	addNovalidate: function (account,code) {
@@ -162,18 +200,33 @@ module.exports = {
 
 	},
 	
-	getContacts: function () {
-		return db;
+	getContacts: function (callback) {
+        sql_exec(SQL_SELECT_ALL,function(results){
+            callback(results);
+        })
 	},
-	setGCMId : function(account,GCMId){
+	setGCMId : function(account){
         if (typeof (db[account]) !== 'undefined')
             db[account].GCMId = GCMId;
 	},
 
-    getGCMId : function (account){
-        if (typeof (db[account]) !== 'undefined')
-            return db[account].getGCMId;
-        return "";
+    getGCMId : function(account,callback){
+        getContact(account, function (result){
+//            console.log("(getGCMId)Results: %j",result)
+            if (result.status != global.OK){
+               callback(result);
+            } else if (typeof (result.result) !=='undefined') {
+//                console.log("%j",result.result)
+                results = new Object()
+                results.status = global.OK;
+                results.GCMId = result.result.gcmid;
+                callback(results)
+            } else {
+                result.status = global.ERR
+                callback(result);
+            }
+        })
+
     },
 
 	getContactsNovalidate: function () {
