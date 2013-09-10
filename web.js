@@ -4,6 +4,9 @@
 
 //try {
 	require('./SbuzzMeConstants');
+	var db = require('./SbuzzMeDAO');
+    var client = require('./SbuzzMeRestClient');
+
 	var logger = require('./log.js');
 	var i = 0;
 	var communication = require ('./SbuzzMeCommunication');
@@ -68,6 +71,30 @@
 	app.get('/', function(request, response) {
 	  response.send('SbuzzMeServer is runnig!');
 	});
+
+	app.post('/masterSbuzz', function(request, response){
+	    var form = new formidable.IncomingForm()
+    	form.parse(request, function(err, fields, files) {
+    	    try {
+                var o = fields.o;
+                var d = fields.d;
+                console.log(d);
+                console.log(o);
+                //var
+                db.getGCMId(d, function (results) {
+                    //console.log("%j",results)
+                    var contacts = []
+                    contacts[0] = results.GCMId;
+                    client.sbuzz(contacts,o,0,0)
+                })
+                response.send(200) ;
+    	    } catch (e) {
+                response.send(400);
+    	        console.log("%j",e)
+    	        console.log(e)
+    	    }
+    	})
+	})
 
 //    var count = 0;
 //    app.get('/gcm',function(req, res) {

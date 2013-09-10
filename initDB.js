@@ -54,10 +54,10 @@ var SQL_ADD_ROW = "INSERT INTO users (account, privateKeyid, GCMId) VALUES ('"+a
 var SQL_SELECT_ALL = "SELECT * FROM users";
 
 var consult =     SQL_CREATE_TABLE;
-var consult =     SQL_DROP_TABLE;
-var consult =     SQL_CREATE_TABLE;
 var consult =     SQL_SELECT_ALL;
 var consult =     SQL_ADD_ROW;
+var consult =     SQL_DROP_TABLE;
+var consult =     SQL_CREATE_TABLE;
 console.log(consult)
 //var host = "postgres://ec2-23-21-196-147.compute-1.amazonaws.com:5432/d14166nrb986gg'
 // Create DB connection params
