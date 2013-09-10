@@ -34,9 +34,7 @@ module.exports = {
         var reqPost = https.request(optionspost, function(res) {
             logger.log("POST CALL (Sbuzz): statusCode: ", res.statusCode);
             res.on('data', function(d) {
-                logger.log('POST CALL (Sbuzz) result:\n');
                 process.stdout.write(d);
-                logger.log('POST CALL (Sbuzz):  completed');
             });
         });
         reqPost.write(stringMsg);
