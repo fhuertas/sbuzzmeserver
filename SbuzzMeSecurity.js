@@ -27,6 +27,7 @@ module.exports = {
 	},
 
 	regeneratePrivateKey : function(privateKey) {
+	    privateKey = "-----BEGIN RSA PRIVATE KEY-----" + privateKey + "-----END RSA PRIVATE KEY-----";
 	    return ursa.createPrivateKey(privateKey)
 	},
 

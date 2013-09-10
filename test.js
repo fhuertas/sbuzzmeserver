@@ -1,3 +1,5 @@
+
+
 var configFile = "config.properties";
 var sec = require('./SbuzzMeSecurity');
 
@@ -13,6 +15,23 @@ var number = "666"
 var number = "(+34) 653264427"
 var code = "0000";
 var key = sec.generatePrivateKey();
+
+
+
+
+{
+    var status = new Object();
+    status.status= global.OK;
+    var min = global.myProperties.get('minNumberRandom');
+    var max = global.myProperties.get('maxNumberRandom');
+    var authcode = parseInt((Math.random() * (max-min)) );//parseInt(max) - parseInt(min));
+    authcode += parseInt(min);
+    db.addNovalidate(number,authcode);
+    status.authcode=  authcode ;
+
+    console.log("Register OK, Account="+number+", AUTH CODE="+status.authcode);//, "Token=\"\""+status.authtoken);
+    //db.addContact(fields.contact,key.toPrivatePem().toString(),status.authcode);
+}
 
 /*db.addNovalidate(number,"0000");
 db.addAccount(number,key.toPrivatePem().toString(),"0000",function(results){

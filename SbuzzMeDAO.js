@@ -80,9 +80,11 @@ db['(+34) 653264427'].privateKey =
 db['(+34) 653264427'].GCMId = "APA91bFYymANKUJg8u_Kte15r3yADzCen_0IkxjkU7m_RR1ixpIDoljLGHeLLyY57sb0teEdPRx5kaXF2SJgSkLtxHQadI1tWcm0-q4-ByKFHHiUCyvqvuM0uWvZw20SXI8y926k7YmgNge9omJLl2IgWSQ-BqkMWw";
 
 var db_2 = new Object();
+db_2['(+34) 653264427'] = new Object();
+db_2['(+34) 653264427'].code = "0000";
+
 
 var sql_exec = function (consult, callback){
-
     var client = new pg.Client(conString);
     client.connect(function(err) {
         if(err) {
@@ -148,12 +150,13 @@ module.exports = {
                     delete db_2[account];
                     result.status =  global.CODE_MAX_MISTAKES;
                     callback(result);
+                }   else {
+                    logger.log("Incorrect code. Account="+account+" attempts="+db_2[account].attempts+"Stored="+db_2[account].code+", Sended="+code);//, "Token=\"\""+status.authtoken);
+                    result.status = global.CODE_INCORRECT;
+                    callback(result);
                 }
-                logger.log("Incorrect code. Account="+account+" attempts="+db_2[account].attempts+"Stored="+db_2[account].code+", Sended="+code);//, "Token=\"\""+status.authtoken);
-                result.status = global.CODE_INCORRECT;
-                callback(result);
             } else {
-                delete db_2[account];
+
                 var consult = SQL_SELECT_WHERE.replace('%1'," account = '"+ account+"'");
 //                console.log(consult);
                 sql_exec(consult,function(results){
@@ -170,6 +173,7 @@ module.exports = {
                                 var consult = SQL_ADD_ROW.replace('%1', account)
                                 consult = consult.replace('%2',  privateKey)
                                 consult = consult.replace('%3', '')
+                                console.log("PEPEPEPEP: addAccount"+callback)
                                 sql_exec(consult,callback );
                             } else {
                                 //var result = //if ((results.length) > 0) {
@@ -181,6 +185,7 @@ module.exports = {
                         }
                     }
                 })
+                delete db_2[account];
                 // El código de autenticación y los intentos guardar en memoria siempre,
             }
         }
@@ -205,9 +210,20 @@ module.exports = {
             callback(results);
         })
 	},
-	setGCMId : function(account){
-        if (typeof (db[account]) !== 'undefined')
-            db[account].GCMId = GCMId;
+	setGCMId : function(account, GCMId, callback){
+        getContact(account, function (result){
+//            console.log("(getGCMId)Results: %j",result)
+            if (result.status != global.OK){
+               callback(result);
+            } else if (typeof (result.result) !=='undefined') {
+                var consult = SQL_UPDATE.replace('%1',"GCMId='"+GCMId+"'")// YA existe
+                consult = consult .replace('%2',"account='"+account+"'")// YA existe
+                sql_exec(consult,callback);
+            } else {
+                result.status = global.ERR
+                callback(result);
+            }
+        })
 	},
 
     getGCMId : function(account,callback){
@@ -220,6 +236,24 @@ module.exports = {
                 results = new Object()
                 results.status = global.OK;
                 results.GCMId = result.result.gcmid;
+                callback(results)
+            } else {
+                result.status = global.ERR
+                callback(result);
+            }
+        })
+
+    },
+
+
+    getPrivateKey : function(account,callback){
+        getContact(account, function (result){
+            if (result.status != global.OK){
+               callback(result);
+            } else if (typeof (result.result) !=='undefined') {
+                results = new Object()
+                results.status = global.OK;
+                results.privateKeyId = result.result.privatekeyid;
                 callback(results)
             } else {
                 result.status = global.ERR

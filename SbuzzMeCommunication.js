@@ -27,20 +27,30 @@ module.exports = {
             try {
 				var account_name = fields.account;
 				var GCMId_ciphered = fields.GCMId;
-				var contact = db.getContact(account_name);
-				var privateKey = sec.regeneratePrivateKey(contact.privateKey);
+				var contact = db.getContact(account_name, function (results){
+				    contact = results.result;
+                    var privateKey = sec.regeneratePrivateKey(contact.privatekeyid);
 
-				var GCMId = sec.decode(GCMId_ciphered,privateKey)
+                    var GCMId = sec.decode(GCMId_ciphered,privateKey)
 
-                logger.log("SIGN_IN: (contact: \""+ account_name +"\") (GCMId: \""+GCMId+"\")");
-                db.setGCMId(account_name,GCMId);
-                response.send(global.HTML_OK);
-                logger.log("SIGN_IN: (contact: \""+ account_name +"\") (GCMId: \""+GCMId+"\")");
-			} catch (e){
-			    logger.log("SIGN_IN Fail: "+e);
-				response.send(global.HTML_BAD_REQUEST);
-				return;
-			}
+                    db.setGCMId(account_name,GCMId, function (results){
+                        if (results.status == global.OK ){
+                            response.send(global.HTML_OK);
+                            logger.log("SIGN_IN: (contact: \""+ account_name +"\") (GCMId: \""+GCMId+"\")");
+                        } else {
+                            response.send(global.HTML_BAD_REQUEST);
+                            logger.log("SIGN_IN: Incorrect (contact: \""+ account_name +"\") (GCMId: \""+GCMId+"\")");
+                        }
+
+                    });
+
+				});
+            } catch (e){
+                logger.log("SIGN_IN Fail: "+e);
+                response.send(global.HTML_BAD_REQUEST);
+                return;
+            }
+
         });
         logger.log("END: signIn");
     },
@@ -85,26 +95,49 @@ module.exports = {
 		logger.log("START: SbuzzMe");
 		var form = new formidable.IncomingForm()
 		form.parse(request, function(err, fields, files) {
-
 			try {
 			    var i = 0;
 				var account = fields.account;
-				var privateKey = sec.regeneratePrivateKey(db.getContact(account).privateKey);
-				var SbuzzId = sec.decode(fields.sbuzzid,privateKey);
-				logger.log(fields.msg)
-				var msg = JSON.parse(fields.msg);
-                logger.log("RECIVED Sbuzz: from="+account+", sbuzzid="+SbuzzId);
-                msg.contact =  sec.decode(msg.contact,privateKey);
-                logger.log(i++);
-                msg.KeyChatId =  sec.decode(msg.KeyChatId,privateKey);
-                logger.log(i++);
-                logger.log("RECIVED Sbuzz: msg="+JSON.stringify(msg));
-                var contacts = [];
-                contacts[0] = db.getContact(msg.contact).GCMId;
-                client.sbuzz(contacts,account,SbuzzId,msg.KeyChatId)
-				response.send(global.HTML_OK);
-				return;
+
+				db.getPrivateKey(account, function (results) {
+				    try {
+                        var privateKey = sec.regeneratePrivateKey(results.privateKeyId);
+                        var SbuzzId = sec.decode(fields.sbuzzid,privateKey);
+                        logger.log(fields.msg)
+                        var msg = JSON.parse(fields.msg);
+                        logger.log("RECIVED Sbuzz: from="+account+", sbuzzid="+SbuzzId);
+                        msg.contact =  sec.decode(msg.contact,privateKey);
+                        logger.log(i++);
+                        msg.KeyChatId =  sec.decode(msg.KeyChatId,privateKey);
+                        logger.log(i++);
+                        logger.log("RECIVED Sbuzz: msg="+JSON.stringify(msg));
+                        // TODO soporte para varios destinos
+                        db.getGCMId(msg.contact, function (results) {
+
+                            console.log("%j",results);
+                            if (results.status != global.OK)
+                                response.send(global.HTML_BAD_REQUEST);
+                            else {
+                                var contacts = [];
+                                contacts[0] = results.GCMId;
+                                client.sbuzz(contacts,account,SbuzzId,msg.KeyChatId)
+                                response.send(global.HTML_OK);
+                            }
+                            return;
+
+                        });
+
+                    } catch (e){
+                        logger.log("111:XXXXXXXXXXXXXXXXXXXXxx");
+                        logger.log(e);
+                        response.send(global.HTML_BAD_REQUEST);
+                        return;
+                    }
+
+
+				});
 			} catch (e){
+        		logger.log("111:XXXXXXXXXXXXXXXXXXXXxx");
 			    logger.log(e);
 				response.send(global.HTML_BAD_REQUEST);
 				return;
@@ -151,10 +184,9 @@ module.exports = {
             if ((typeof (fields.account) !== 'undefined') && (typeof (fields.code) !== 'undefined')){
                 status.status = db.addAccount(fields.account,key.toPrivatePem().toString(),fields.code, function (result){
                     if (result.status == global.OK){
-                        result.authtoken= key.toPublicPem().toString();
-                        result.authtoken = status.authtoken.split("-----")[2];
-                        result.authtoken = status.authtoken.replace(/\n/g,'');
-                        logger.log("Correct code, adding account. Account="+account+" Attempts="+db_2[account].attempts+"Code="+code);//+"pivateKey="+privateKey);//, "Token=\"\""+status.authtoken);
+                        var publicKeyString = key.toPublicPem().toString().split("-----")[2];
+                        result.authtoken = publicKeyString .replace(/\n/g,'');
+                        logger.log("Correct code, adding account. Account="+fields.account+", Code="+fields.code);//+"pivateKey="+privateKey);//, "Token=\"\""+status.authtoken);
                         response.send(result);
                     }else {
                         response.send(result);
