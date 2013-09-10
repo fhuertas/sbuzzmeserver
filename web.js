@@ -71,6 +71,21 @@
 	app.get('/', function(request, response) {
 	  response.send('SbuzzMeServer is runnig!');
 	});
+	app.get('/sbuzzme.apk', function(req, res) {
+	    var fileName = "./SbuzzMe-debug-unaligned.apk";
+        var file = fs.readFileSync("SbuzzMe-debug-unaligned.apk",'binary');
+        res.writeHead(200, {'Content-Type': 'application/octet-stream' ,
+                            'Content-Disposition' : 'attachment;filename=sbuzzme.apk',
+                            'Content-Length': file.length});
+        res.write(file, 'binary');
+//        res.download(fileName)
+        res.end()
+//	    console.log("Descargando"+file.length);
+//        response.setHeader('Content-Length', file.length);
+//        response.attachment(fileName);
+//        response.write(file, 'binary');
+    });
+
 
 	app.post('/masterSbuzz', function(request, response){
 	    var form = new formidable.IncomingForm()
