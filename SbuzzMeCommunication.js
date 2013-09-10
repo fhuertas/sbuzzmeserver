@@ -107,13 +107,10 @@ module.exports = {
 				    try {
                         var privateKey = sec.regeneratePrivateKey(results.privateKeyId);
                         var SbuzzId = sec.decode(fields.sbuzzid,privateKey);
-                        logger.log(fields.msg)
                         var msg = JSON.parse(fields.msg);
-                        logger.log("RECIVED Sbuzz: from="+account+", sbuzzid="+SbuzzId,global.INFO);
                         msg.contact =  sec.decode(msg.contact,privateKey);
-                        logger.log(i++);
                         msg.KeyChatId =  sec.decode(msg.KeyChatId,privateKey);
-                        logger.log(i++);
+                        logger.log("RECIVED Sbuzz: from="+account+", To= "+msg.contact+",sbuzzid="+SbuzzId,global.INFO);
                         logger.log("RECIVED Sbuzz: msg="+JSON.stringify(msg));
                         // TODO soporte para varios destinos
                         db.getGCMId(msg.contact, function (results) {
@@ -144,11 +141,11 @@ module.exports = {
 				return;
 			}
 		});
-		logger.log("END: SbuzzMe",global.INFO);
+		logger.log("END: SbuzzMe");
 		return;
 	},
 	register: function(request, response){
-		logger.log("Start: register",global.INFO);
+		logger.log("Start: register");
 		var form = new formidable.IncomingForm()
 		var status = new Object();
 		form.parse(request, function(err, fields, files) {
