@@ -56,6 +56,8 @@ module.exports = {
     },
 	check: function(request, response){
 		logger.log("START: Check contacts");
+		response.send(global.OK);
+		return;
 		var form = new formidable.IncomingForm()
 		form.parse(request, function(err, fields, files) {
 			// Si no esta esta linea una llamada incorrecta puede petar el servicio
