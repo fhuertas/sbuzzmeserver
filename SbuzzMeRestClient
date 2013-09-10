@@ -32,7 +32,6 @@ module.exports = {
         };
 
         var reqPost = https.request(optionspost, function(res) {
-            logger.log("POST CALL (Sbuzz): statusCode: ", res.statusCode);
             res.on('data', function(d) {
                 process.stdout.write(d);
             });
