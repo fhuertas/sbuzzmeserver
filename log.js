@@ -16,7 +16,7 @@ if (destino == 'console'){
 	functionLog = function (text,level){
 		if (typeof level === 'undefined') level = 0;
 		if (debugLevel<= level) {
-			//console.log(text)
+			console.log(text)
 		}
 	}
 }
