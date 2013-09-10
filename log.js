@@ -8,14 +8,14 @@ var functionLog;
 if (destino == 'console'){
 	functionLog = function(text,level){
 		if (typeof level === 'undefined') level = 0;
-		if (debugLevel >= level) {
+		if (debugLevel <= level) {
 			console.log(text)
 		}
 	}
 } else {
 	functionLog = function (text,level){
 		if (typeof level === 'undefined') level = 0;
-		if (debugLevel >= level) {
+		if (debugLevel<= level) {
 			//console.log(text)
 		}
 	}
