@@ -13,3 +13,5 @@ global.OFFLINE = "offline";
 global.UNKNOWN = "unknown";
 global.HTML_OK = 200;
 global.HTML_BAD_REQUEST = 400;
+
+global.INFO = 10;

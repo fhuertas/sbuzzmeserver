@@ -23,7 +23,7 @@ module.exports = {
     signIn: function(request, response){
         var form = new formidable.IncomingForm()
         form.parse(request, function(err, fields, files) {
-            logger.log("START: signIn.");
+            logger.log("START: signIn.",global.INFO);
             try {
 				var account_name = fields.account;
 				var GCMId_ciphered = fields.GCMId;
@@ -36,10 +36,10 @@ module.exports = {
                     db.setGCMId(account_name,GCMId, function (results){
                         if (results.status == global.OK ){
                             response.send(global.HTML_OK);
-                            logger.log("SIGN_IN: (contact: \""+ account_name +"\") (GCMId: \""+GCMId+"\")");
+                            logger.log("SIGN_IN: (contact: \""+ account_name +"\") (GCMId: \""+GCMId+"\")",global.INFO);
                         } else {
                             response.send(global.HTML_BAD_REQUEST);
-                            logger.log("SIGN_IN: Incorrect (contact: \""+ account_name +"\") (GCMId: \""+GCMId+"\")");
+                            logger.log("SIGN_IN: Incorrect (contact: \""+ account_name +"\") (GCMId: \""+GCMId+"\")",global.INFO);
                         }
 
                     });
@@ -52,10 +52,12 @@ module.exports = {
             }
 
         });
-        logger.log("END: signIn");
+        logger.log("END: signIn",global.INFO);
     },
 	check: function(request, response){
-		logger.log("START: Check contacts");
+		logger.log("START: Check contacts",global.INFO);
+        logger.log("END: Check contacts",global.INFO);
+
 		response.send(global.OK);
 		return;
 		var form = new formidable.IncomingForm()
@@ -89,7 +91,7 @@ module.exports = {
 				response.send(global.HTML_BAD_REQUEST);
 			}
 		});
-		logger.log("END: Check contacts");
+		logger.log("END: Check contacts",global.INFO);
 		return;
 	},
 
@@ -107,7 +109,7 @@ module.exports = {
                         var SbuzzId = sec.decode(fields.sbuzzid,privateKey);
                         logger.log(fields.msg)
                         var msg = JSON.parse(fields.msg);
-                        logger.log("RECIVED Sbuzz: from="+account+", sbuzzid="+SbuzzId);
+                        logger.log("RECIVED Sbuzz: from="+account+", sbuzzid="+SbuzzId,global.INFO);
                         msg.contact =  sec.decode(msg.contact,privateKey);
                         logger.log(i++);
                         msg.KeyChatId =  sec.decode(msg.KeyChatId,privateKey);
@@ -116,7 +118,6 @@ module.exports = {
                         // TODO soporte para varios destinos
                         db.getGCMId(msg.contact, function (results) {
 
-                            console.log("%j",results);
                             if (results.status != global.OK)
                                 response.send(global.HTML_BAD_REQUEST);
                             else {
@@ -130,7 +131,6 @@ module.exports = {
                         });
 
                     } catch (e){
-                        logger.log("111:XXXXXXXXXXXXXXXXXXXXxx");
                         logger.log(e);
                         response.send(global.HTML_BAD_REQUEST);
                         return;
@@ -139,17 +139,16 @@ module.exports = {
 
 				});
 			} catch (e){
-        		logger.log("111:XXXXXXXXXXXXXXXXXXXXxx");
 			    logger.log(e);
 				response.send(global.HTML_BAD_REQUEST);
 				return;
 			}
 		});
-		logger.log("END: SbuzzMe");
+		logger.log("END: SbuzzMe",global.INFO);
 		return;
 	},
 	register: function(request, response){
-		logger.log("Start: register");
+		logger.log("Start: register",global.INFO);
 		var form = new formidable.IncomingForm()
 		var status = new Object();
 		form.parse(request, function(err, fields, files) {
@@ -162,7 +161,7 @@ module.exports = {
 				authcode += parseInt(min);
                 db.addNovalidate(fields.account,authcode);
 				status.authcode=  authcode ;
-				logger.log("Register OK, Account="+fields.account+", AUTH CODE="+status.authcode);//, "Token=\"\""+status.authtoken);
+				logger.log("Register OK, Account="+fields.account+", AUTH CODE="+status.authcode,global.INFO);//, "Token=\"\""+status.authtoken);
 				//db.addContact(fields.contact,key.toPrivatePem().toString(),status.authcode);
 				response.set('Content-Type', 'application/json');
 				response.send(status);
@@ -188,7 +187,7 @@ module.exports = {
                     if (result.status == global.OK){
                         var publicKeyString = key.toPublicPem().toString().split("-----")[2];
                         result.authtoken = publicKeyString .replace(/\n/g,'');
-                        logger.log("Correct code, adding account. Account="+fields.account+", Code="+fields.code);//+"pivateKey="+privateKey);//, "Token=\"\""+status.authtoken);
+                        logger.log("Correct code, adding account. Account="+fields.account+", Code="+fields.code,global.INFO);//+"pivateKey="+privateKey);//, "Token=\"\""+status.authtoken);
                         response.send(result);
                     }else {
                         response.send(result);
@@ -207,7 +206,7 @@ module.exports = {
 //				response.send(status);
 //            }
         });
-	    logger.log("End: validation");
+	    logger.log("End: validation",global.INFO);
 	},
 
 	getContacts: function(request, response){

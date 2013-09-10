@@ -103,7 +103,7 @@ var sql_exec = function (consult, callback){
                 results.status = global.OK;
                 results.result = result;
 //                    console.log("OK:"+result)
-                console.log("Results: %j",result)
+//                console.log("Results: %j",result)
                 callback(results)
             }
             return;
@@ -173,7 +173,6 @@ module.exports = {
                                 var consult = SQL_ADD_ROW.replace('%1', account)
                                 consult = consult.replace('%2',  privateKey)
                                 consult = consult.replace('%3', '')
-                                console.log("PEPEPEPEP: addAccount"+callback)
                                 sql_exec(consult,callback );
                             } else {
                                 //var result = //if ((results.length) > 0) {
