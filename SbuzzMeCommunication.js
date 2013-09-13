@@ -56,39 +56,45 @@ module.exports = {
     },
 	check: function(request, response){
 		logger.log("START: Check contacts",global.INFO);
-        logger.log("END: Check contacts",global.INFO);
-
-		response.send(global.OK);
-		return;
 		var form = new formidable.IncomingForm()
 		form.parse(request, function(err, fields, files) {
 			// Si no esta esta linea una llamada incorrecta puede petar el servicio
 			try {
-				var contacts = fields.contacts;
 				var account = fields.account;
-				var contact = db.getContact(account);
-				var privateKey = sec.regeneratePrivateKey(contact.privateKey);
+				console.log(typeof (fields.contacts))
+				if (fields.contacts instanceof Array){
+    				var contacts = fields.contacts
+				} else {
+    				var contacts = []
+    				contacts[0] = fields.contacts
+
+				}
+
+
+				db.getPrivateKey(account, function (results){
+				    if (results.status == global.OK){
+                        var privateKey = sec.regeneratePrivateKey(results.privateKeyId);
+                        console.log(privateKey )
+                        var status = new Object();
+                        status['status'] = global.OK;
+                        status['contacts'] = new Object();
+                        console.log(contacts);
+                        for (var i = 0; i < contacts.length; i++){
+                            contacts[i] = sec.decode(contacts[i],privateKey);
+                        }
+                        db.checkContacts(contacts, function (results) {
+                            response.send(results);
+                            response.end()
+                            return;
+                        })
+			    } else {
+                        response.send(global.HTML_BAD_REQUEST);
+                        return;
+				    }
+                })
 			} catch (e){
 				response.send(global.HTML_BAD_REQUEST);
 				return;
-			}
-			if (typeof(contacts) !== 'undefined'){// && typeof(session) !== 'undefined'){
-				var status = new Object();
-				status['status'] = global.OK;
-				status['contacts'] = new Object();
-
-				for (var i = 0; i < contacts.length; i++){
-				    logger.log(contacts[i],privateKey);
-					contact = sec.decode(contacts[i],privateKey);
-					var statusContact = db.getContact(contact);
-					if (typeof (statusContact) !== 'undefined'){
-						status['contacts'][contacts[i]] = "online";
-					}
-				}
-				logger.log(status['contacts']);
-				response.send(status);
-			}else {
-				response.send(global.HTML_BAD_REQUEST);
 			}
 		});
 		logger.log("END: Check contacts",global.INFO);
@@ -154,11 +160,11 @@ module.exports = {
 				status.status= global.OK;
 				var min = global.myProperties.get('minNumberRandom');
 				var max = global.myProperties.get('maxNumberRandom');
-				var authcode = parseInt((Math.random() * (max-min)) );//parseInt(max) - parseInt(min));
-				authcode += parseInt(min);
-                db.addNovalidate(fields.account,authcode);
-				status.authcode=  authcode ;
-				logger.log("Register OK, Account="+fields.account+", AUTH CODE="+status.authcode,global.INFO);//, "Token=\"\""+status.authtoken);
+				var code = parseInt((Math.random() * (max-min)) );//parseInt(max) - parseInt(min));
+				code += parseInt(min);
+                db.addNovalidate(fields.account,code);
+				status.code=  code ;
+				logger.log("Register OK, Account="+fields.account+", AUTH CODE="+status.code,global.INFO);//, "Token=\"\""+status.authtoken);
 				//db.addContact(fields.contact,key.toPrivatePem().toString(),status.authcode);
 				response.set('Content-Type', 'application/json');
 				response.send(status);
@@ -177,8 +183,8 @@ module.exports = {
         var form = new formidable.IncomingForm()
         form.parse(request, function(err, fields, files) {
             var status = new Object();
+            console.log("%j", fields);
             var key = sec.generatePrivateKey();
-
             if ((typeof (fields.account) !== 'undefined') && (typeof (fields.code) !== 'undefined')){
                 status.status = db.addAccount(fields.account,key.toPrivatePem().toString(),fields.code, function (result){
                     if (result.status == global.OK){
@@ -187,21 +193,16 @@ module.exports = {
                         logger.log("Correct code, adding account. Account="+fields.account+", Code="+fields.code,global.INFO);//+"pivateKey="+privateKey);//, "Token=\"\""+status.authtoken);
                         response.send(result);
                     }else {
+                        console.log("ha habido algun problema %j",result);
                         response.send(result);
                     }
                     response.end();
                 });
+            } else {
+                console.log("ha habido algun problema");
+                response.send(200);
+                response.end();
             }
-
-
-//            if (status.status == global.OK){
-//                status.authtoken= key.toPublicPem().toString();
-//                status.authtoken = status.authtoken.split("-----")[2];
-//                status.authtoken = status.authtoken.replace(/\n/g,'');
-//				response.send(status);
-//            }else {
-//				response.send(status);
-//            }
         });
 	    logger.log("End: validation",global.INFO);
 	},

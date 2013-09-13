@@ -43,6 +43,7 @@ var SQL_UPDATE = "UPDATE users SET %1 WHERE %2"
 
 var logger = require('./log.js');
 
+var SQL_SELECT = "SELECT %select FROM %from WHERE %where"
 
 // Base de datos temporal, posiblemente luego si esta establecido guarde el socket o offline si esta desctivada
 // Problemas paises
@@ -86,8 +87,10 @@ db_2['(+34) 653264427'].code = "0000";
 
 var sql_exec = function (consult, callback){
     var client = new pg.Client(conString);
+    console.log(consult)
     client.connect(function(err) {
         if(err) {
+            result = new Object
             logger.log (err)
             result.status = global.ERR;
             callback(result);
@@ -117,6 +120,7 @@ var sql_exec = function (consult, callback){
 }
 
 var getContact = function(contact, callback){
+
     var consult = SQL_SELECT_WHERE.replace('%1', "account='"+contact+"'")
     sql_exec(consult,function(results){
         if (results.status != global.OK){
@@ -203,6 +207,44 @@ module.exports = {
     	logger.log("Added to db_2 OK, Account="+account+", AUTH CODE="+code+", ATTEMPS="+global.myProperties.get('attempts'));//, "Token=\"\""+status.authtoken);
 
 	},
+    checkContacts: function (contacts, callback) {
+        var consult = SQL_SELECT.replace("%select", "account");
+        consult = consult.replace("%from", "users")
+        if (contacts.length   > 0){
+            var where = "account IN ('"+ contacts[0]+"'";
+            for (var i = 1; i < contacts.length ; i++){
+                where += ",'"+contacts[1]+"'";
+            }
+            where += " )"
+            consult = consult.replace("%where", where)
+            console.log(consult);
+            sql_exec(consult,function (results){
+                console.log("despues consulta"+results.status)
+                if (results.status == global.OK) {
+                    // TODO comprobar si no hay resultados y si se hace consulta
+                    var result = new Object
+                    result.status = global.OK;
+                    console.log("%j",results)
+                    if (typeof (results.result) !== 'undefined') {
+                        result.contacts = results.result.rows;
+                    }
+                    callback(result);
+                }
+                else {
+                    var result = new Object
+                    result.status = results.status;
+                    callback(result)
+                }
+            });
+        } else {
+            var result = new Object
+            result.status = global.ERR
+            callback(result)
+        }
+
+
+   },
+
 	
 	getContacts: function (callback) {
         sql_exec(SQL_SELECT_ALL,function(results){
@@ -247,6 +289,7 @@ module.exports = {
 
     getPrivateKey : function(account,callback){
         getContact(account, function (result){
+
             if (result.status != global.OK){
                callback(result);
             } else if (typeof (result.result) !=='undefined') {
