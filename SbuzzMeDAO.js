@@ -226,7 +226,10 @@ module.exports = {
                     result.status = global.OK;
                     console.log("%j",results)
                     if (typeof (results.result) !== 'undefined') {
-                        result.contacts = results.result.rows;
+                        result.contacts = new Object;
+                        for (var i = 0; i < results.result.rows.length; i++){
+                            result.contacts[i] = results.result.rows[i].account;
+                        }
                     }
                     callback(result);
                 }

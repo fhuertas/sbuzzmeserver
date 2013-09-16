@@ -83,6 +83,7 @@ module.exports = {
                             contacts[i] = sec.decode(contacts[i],privateKey);
                         }
                         db.checkContacts(contacts, function (results) {
+                            console.log("%j",results)
                             response.send(results);
                             response.end()
                             return;
