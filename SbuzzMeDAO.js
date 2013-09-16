@@ -213,7 +213,7 @@ module.exports = {
         if (contacts.length   > 0){
             var where = "account IN ('"+ contacts[0]+"'";
             for (var i = 1; i < contacts.length ; i++){
-                where += ",'"+contacts[1]+"'";
+                where += ",'"+contacts[i]+"'";
             }
             where += " )"
             consult = consult.replace("%where", where)
