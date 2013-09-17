@@ -100,9 +100,12 @@
                     //console.log("%j",results)
                     var contacts = []
                     contacts[0] = results.GCMId;
-                    client.sbuzz(contacts,o,0,0)
+                    var id = client.sbuzz(contacts,o,0,0)
+                    var result = new Object
+                    result.status = global.OK
+                    result.sbuzzid = id;
+                    response.send(result) ;
                 })
-                response.send(200) ;
     	    } catch (e) {
                 response.send(400);
     	        console.log("%j",e)

@@ -127,8 +127,11 @@ module.exports = {
                             else {
                                 var contacts = [];
                                 contacts[0] = results.GCMId;
-                                client.sbuzz(contacts,account,SbuzzId,msg.KeyChatId)
-                                response.send(global.HTML_OK);
+                                var id = client.sbuzz(contacts,account,SbuzzId,msg.KeyChatId)
+                                var result = new Object
+                                result.status = global.OK
+                                result.sbuzzid = id;
+                                response.send(result);
                             }
                             return;
 
