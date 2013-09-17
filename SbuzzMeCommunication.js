@@ -187,7 +187,7 @@ module.exports = {
         var form = new formidable.IncomingForm()
         form.parse(request, function(err, fields, files) {
             var status = new Object();
-            console.log("%j", fields);
+//            console.log("%j", fields);
             var key = sec.generatePrivateKey();
             if ((typeof (fields.account) !== 'undefined') && (typeof (fields.code) !== 'undefined')){
                 status.status = db.addAccount(fields.account,key.toPrivatePem().toString(),fields.code, function (result){
@@ -230,6 +230,34 @@ module.exports = {
     		logger.log("Se ha hecho ping");
     		response.send("200");
     		logger.log("End: ping");
+    },
+    getUrl: function(request, response) {
+        logger.log("Start: register");
+        var form = new formidable.IncomingForm()
+        var status = new Object();
+        form.parse(request, function(err, fields, files) {
+            var result = new Object();
+            var version = fields.version;
+            var stableVersion = global.myProperties.get("stableVersion")
+            var betaVersion = global.myProperties.get("betaVersion")
+            var alphaVersion = global.myProperties.get("alphaVersion")
+            if (version <= stableVersion){
+                result.status = global.OK;
+                result.server = global.myProperties.get("stableUrl")
+            } else if (version <= betaVersion) {
+                result.status = global.OK;
+                result.server = global.myProperties.get("betaUrl")
+            } else if (version <= alphaVersion) {
+                result.status = global.OK;
+                result.server = global.myProperties.get("alphaUrl")
+            } else {
+                result.status = global.ERR;
+            }
+            response.send(result)
+
+
+        });
+
     }
 
 }
