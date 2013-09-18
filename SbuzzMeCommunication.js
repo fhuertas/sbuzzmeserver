@@ -238,21 +238,13 @@ module.exports = {
         form.parse(request, function(err, fields, files) {
             var result = new Object();
             var version = fields.version;
-            var stableVersion = global.myProperties.get("stableVersion")
-            var betaVersion = global.myProperties.get("betaVersion")
-            var alphaVersion = global.myProperties.get("alphaVersion")
-            if (version <= stableVersion){
-                result.status = global.OK;
-                result.server = global.myProperties.get("stableUrl")
-            } else if (version <= betaVersion) {
-                result.status = global.OK;
-                result.server = global.myProperties.get("betaUrl")
-            } else if (version <= alphaVersion) {
-                result.status = global.OK;
-                result.server = global.myProperties.get("alphaUrl")
-            } else {
-                result.status = global.ERR;
+            var url = global.myProperties.get(version);
+            console.log(typeof(url))
+            if (typeof (url) === 'undefined'){// || url == null || url == ''){
+                url = global.myProperties.get('default');
             }
+            result.status = global.OK;
+            result.server = url;
             response.send(result)
 
 
