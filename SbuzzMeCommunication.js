@@ -232,14 +232,14 @@ module.exports = {
     		logger.log("End: ping");
     },
     getUrl: function(request, response) {
-        logger.log("Start: register");
+        logger.log("Start: getUrl");
         var form = new formidable.IncomingForm()
         var status = new Object();
         form.parse(request, function(err, fields, files) {
             var result = new Object();
             var version = fields.version;
+            console.log(version)
             var url = global.myProperties.get(version);
-            console.log(typeof(url))
             if (typeof (url) === 'undefined'){// || url == null || url == ''){
                 url = global.myProperties.get('default');
             }
@@ -249,6 +249,7 @@ module.exports = {
 
 
         });
+        logger.log("End: getUrl");
 
     }
 
