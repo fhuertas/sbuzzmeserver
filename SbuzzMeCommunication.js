@@ -26,7 +26,7 @@ module.exports = {
             logger.log("START: signIn.",global.INFO);
             try {
 				var account_name = fields.account;
-				var GCMId_ciphered = fields.GCMId;
+				var GCMId_ciphered = fields.gcmid;
 				var contact = db.getContact(account_name, function (results){
 				    contact = results.result;
                     var privateKey = sec.regeneratePrivateKey(contact.privatekeyid);
@@ -231,27 +231,6 @@ module.exports = {
     		response.send("200");
     		logger.log("End: ping");
     },
-    getUrl: function(request, response) {
-        logger.log("Start: getUrl");
-        var form = new formidable.IncomingForm()
-        var status = new Object();
-        form.parse(request, function(err, fields, files) {
-            var result = new Object();
-            var version = fields.version;
-            console.log(version)
-            var url = global.myProperties.get(version);
-            if (typeof (url) === 'undefined'){// || url == null || url == ''){
-                url = global.myProperties.get('default');
-            }
-            result.status = global.OK;
-            result.server = url;
-            response.send(result)
-
-
-        });
-        logger.log("End: getUrl");
-
-    }
 
 }
 

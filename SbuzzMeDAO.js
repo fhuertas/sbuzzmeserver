@@ -2,6 +2,7 @@
 require('./SbuzzMeConstants');
 var pg = require('pg');
 
+var db_2 = new Object();
 
 /* DATABASE INFO */
 var conString =  {
