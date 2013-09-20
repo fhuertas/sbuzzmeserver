@@ -33,7 +33,7 @@ try {
 
 	var port = process.env.PORT || _port;
 	app.listen(port, function() {
-	  console.log("Listening on " + port);
+	  logger.log("Listening on " + port);
 	});
 	
 	
@@ -41,7 +41,7 @@ try {
 	
 	return;
 }catch (err){
-	console.log(err)
+	logger.log(err)
 	// Procesos de salida de emergencia
 	process.exit(1);
 }
