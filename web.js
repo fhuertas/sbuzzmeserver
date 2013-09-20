@@ -69,7 +69,7 @@
 	app.post(pingPath,communication.ping);
 	app.post(validatePath,communication.validate);
 	app.post(signInPath,communication.signIn);
-	app.post(getUrlServerPath,communication.getUrl);
+//	app.post(getUrlServerPath,communication.getUrl);
 	app.get(listQueuePath,communication.listQueue);
 	app.get('/', function(request, response) {
 	  response.send('SbuzzMeServer is runnig!');
