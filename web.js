@@ -2,7 +2,7 @@
 
 
 
-//try {
+try {
 	require('./SbuzzMeConstants');
 	var db = require('./SbuzzMeDAO');
     var client = require('./SbuzzMeRestClient');
@@ -55,12 +55,7 @@
 	logger.log("Path de obtener contactos="+getContactsPath);
 	logger.log("Path de obtener contactos no validados="+getContactsNovalidatePath);
 	logger.log("Path de listar la cola de mensajes="+listQueuePath);
-	logger.log("Path de obtenerUrl="+getUrlServerPath);
 
-
-	//app.get(registerPath,communication.register);
-	//app.get(validatePath,communication.validate);
-	//app.get(getContactsPath,communication.getContacts);
 
 	app.post(checkPath,communication.check);
 	app.post(SbuzzMePath,communication.sbuzzme);
@@ -69,25 +64,10 @@
 	app.post(pingPath,communication.ping);
 	app.post(validatePath,communication.validate);
 	app.post(signInPath,communication.signIn);
-//	app.post(getUrlServerPath,communication.getUrl);
 	app.get(listQueuePath,communication.listQueue);
 	app.get('/', function(request, response) {
 	  response.send('SbuzzMeServer is runnig!');
 	});
-	app.get('/sbuzzme.apk', function(req, res) {
-	    var fileName = "./SbuzzMe-debug-unaligned.apk";
-        var file = fs.readFileSync("SbuzzMe-debug-unaligned.apk",'binary');
-        res.writeHead(200, {'Content-Type': 'application/octet-stream' ,
-                            'Content-Disposition' : 'attachment;filename=sbuzzme.apk',
-                            'Content-Length': file.length});
-        res.write(file, 'binary');
-//        res.download(fileName)
-        res.end()
-//	    console.log("Descargando"+file.length);
-//        response.setHeader('Content-Length', file.length);
-//        response.attachment(fileName);
-//        response.write(file, 'binary');
-    });
 
 
 	app.post('/masterSbuzz', function(request, response){
@@ -118,24 +98,7 @@
 	})
 
 
-//    var count = 0;
-//    app.get('/gcm',function(req, res) {
-//        var message= new gcm.Message;
-//        //message
-//        message.addData('message', 'Hello World. Count='+(count++));
-//        //_.intersection(registrationIds, req.body.receptors.split(','));
-//        sender.send(message, registrationIds, 4, function(result) {
-//            console.log(result);
-//        });
-//        res.send(200);
-//    });
-//
-//    app.get('/ind',function(req, res) {
-//       res.render('index', {
-//          title: 'Express',
-//          receptors: registrationIds
-//        });
-//    });
+
 	var port = process.env.PORT || _port;
 	app.listen(port, function() {
 	  console.log("Listening on " + port);
@@ -145,11 +108,11 @@
 	
 	
 	return;
-/*}catch (err){
+}catch (err){
 	console.log(err)
 	// Procesos de salida de emergencia
 	process.exit(1);
-}*/
+}
 
 
 
