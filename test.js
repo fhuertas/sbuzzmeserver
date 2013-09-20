@@ -1,4 +1,12 @@
+var db = require('./SbuzzMeDAO');
 
+
+var contacts = ['+653264427','+34-653264427']
+db.checkContacts(contacts,function(results){
+    console.log("%j",results)
+})
+
+return;
 
 var configFile = "config.properties";
 var sec = require('./SbuzzMeSecurity');
