@@ -4,7 +4,8 @@ var pg = require('pg');
 
 
 /* DATABASE INFO */
-var conString =  process.env.DATABASE_URL || {
+//var conString =  process.env.DATABASE_URL || {
+var conString =   {
 	host: 'ec2-23-21-196-147.compute-1.amazonaws.com',
 	port: '5432',
 	user: 'bqatgfwygpobil',
