@@ -2,7 +2,7 @@
 
 
 
-try {
+//try {
 	require('./SbuzzMeConstants');
 	var db = require('./SbuzzMeDAO');
     var client = require('./SbuzzMeRestClient');
@@ -108,11 +108,10 @@ try {
 	
 	
 	return;
-}catch (err){
-	console.log(err)
-	// Procesos de salida de emergencia
-	process.exit(1);
-}
+//}catch (err){
+//	console.log(err)
+//	process.exit(1);
+//}
 
 
 
