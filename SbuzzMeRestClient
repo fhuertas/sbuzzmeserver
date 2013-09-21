@@ -4,6 +4,7 @@ var logger = require('./log.js');
 var crypto = require('crypto')
 
 
+
 module.exports = {
 
     sbuzz : function  (listContacts, origin, sbuzzid, chatid) {
