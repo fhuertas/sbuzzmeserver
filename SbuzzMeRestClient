@@ -1,4 +1,4 @@
-var ServerKey = "AIzaSyD4db5gqWO053uMJBbe8EQbizJ8qIcH5wc";
+var ServerKey = "AIzaSyAxtVQJmqmsKAOIdHszjDMVxjEQHKMSe-w";
 var https = require('https');
 var logger = require('./log.js');
 var crypto = require('crypto')
