@@ -2,7 +2,6 @@
 
 
 
-try {
 	require('./SbuzzMeConstants');
 
 	var logger = require('./log.js');
@@ -40,11 +39,6 @@ try {
 	
 	
 	return;
-}catch (err){
-	logger.log(err)
-	// Procesos de salida de emergencia
-	process.exit(1);
-}
 
 
 
