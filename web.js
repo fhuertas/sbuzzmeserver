@@ -96,6 +96,21 @@
     	    }
     	})
 	})
+	app.post('/getAll', function(request, response){
+	    db.getContacts(function (results){
+	        var result_sended = new Object;
+//	        console.log(results.result.rowCount)
+	        for (var i_row in results.result.rows) {
+//	            console.log("%j",row)
+	            var row = results.result.rows[i_row];
+
+	            result_sended[row.account] = row.id + "|" + row.gcmid;
+//    	        console.log(row.account+":%j",result_sended[row.account])
+	        }
+	        response.send(result_sended)
+	        response.end()
+	    })
+	})
 
 
 
