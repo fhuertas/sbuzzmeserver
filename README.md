@@ -1,13 +1,14 @@
-# node-js-sample
+# Messaging service in node
 
-This is a barebones Node.js app using the [Express](http://expressjs.com/) framework.
+POC of a messenger service based on Node JS and google play services
+
 
 ## Running Locally
 
 Asumming you have [Node.js](http://nodejs.org/) and [Heroku Toolbelt](https://toolbelt.heroku.com/) installed on your machine:
 
 ```sh
-git clone git@github.com:heroku/node-js-sample.git # or clone your own fork
+git clone git@github.com:fhuertas/sbuzzmeserver.git # or clone your own fork
 cd node-js-sample
 npm install
 foreman start
